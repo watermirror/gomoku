@@ -1,6 +1,9 @@
 package org.bymc.gomoku.model.abstraction
 
-import org.bymc.gomoku.model.common.*
+import org.bymc.gomoku.model.common.Drop
+import org.bymc.gomoku.model.common.DropLegality
+import org.bymc.gomoku.model.common.GameState
+import org.bymc.gomoku.model.common.Location2D
 
 /**
  * 规则接口。
@@ -18,7 +21,7 @@ interface Rule {
     /**
      * 根据最后落子的单元格坐标判定棋局状态。
      */
-    fun judgeGameState(board: Board, lastDroppedLocation: Location2D): GameState
+    fun judgeGameState(board: Board, lastDropLocation: Location2D): GameState
 
     /**
      * 判定棋局状态。该方法性能较差。
