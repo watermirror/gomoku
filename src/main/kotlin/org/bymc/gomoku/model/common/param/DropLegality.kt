@@ -1,4 +1,4 @@
-package org.bymc.gomoku.model.common
+package org.bymc.gomoku.model.common.param
 
 /**
  * 落子合法性。
@@ -26,10 +26,20 @@ enum class DropLegality {
     /**
      * 违反三三禁手规则。
      */
-    FORBIDDEN_BY_3_3_RULE,
+    FORBIDDEN_BY_TTNH_RULE,
 
     /**
-     * 指定单元格不存在。
+     * 违反四四禁手规则。
      */
-    CELL_NONEXISTENT
+    FORBIDDEN_BY_FFNH_RULE,
+
+    /**
+     * 违反长连禁手规则。
+     */
+    FORBIDDEN_BY_OLNH_RULE,
+
+    /**
+     * 落子在棋盘之外。
+     */
+    OUT_OF_BOARD
 }

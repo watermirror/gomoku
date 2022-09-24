@@ -1,4 +1,4 @@
-package org.bymc.gomoku.model.common
+package org.bymc.gomoku.model.common.param
 
 /**
  * 落子操作。

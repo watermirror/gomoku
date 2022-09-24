@@ -1,6 +1,6 @@
 package org.bymc.gomoku.model.abstraction
 
-import org.bymc.gomoku.model.common.Drop
+import org.bymc.gomoku.model.common.param.Drop
 import java.util.Date
 
 /**

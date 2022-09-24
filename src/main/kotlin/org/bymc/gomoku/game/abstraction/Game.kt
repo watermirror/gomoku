@@ -2,8 +2,8 @@ package org.bymc.gomoku.game.abstraction
 
 import org.bymc.gomoku.game.common.GameSituation
 import org.bymc.gomoku.model.abstraction.BoardView
-import org.bymc.gomoku.model.common.DropLegality
-import org.bymc.gomoku.model.common.Location2D
+import org.bymc.gomoku.model.common.param.DropLegality
+import org.bymc.gomoku.model.common.param.Location2D
 
 /**
  * 游戏逻辑接口。

@@ -1,7 +1,7 @@
 package org.bymc.gomoku.game.common
 
-import org.bymc.gomoku.model.common.GameState
-import org.bymc.gomoku.model.common.Stone
+import org.bymc.gomoku.model.common.param.GameState
+import org.bymc.gomoku.model.common.param.Stone
 import java.util.Date
 
 /**

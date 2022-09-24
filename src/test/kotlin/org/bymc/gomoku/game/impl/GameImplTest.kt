@@ -5,7 +5,7 @@ import org.bymc.gomoku.model.abstraction.Board
 import org.bymc.gomoku.model.abstraction.DropRecord
 import org.bymc.gomoku.model.abstraction.History
 import org.bymc.gomoku.model.abstraction.Rule
-import org.bymc.gomoku.model.common.*
+import org.bymc.gomoku.model.common.param.*
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*

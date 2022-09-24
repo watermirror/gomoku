@@ -1,7 +1,7 @@
 package org.bymc.gomoku.model.abstraction
 
-import org.bymc.gomoku.model.common.Location2D
-import org.bymc.gomoku.model.common.Size2D
+import org.bymc.gomoku.model.common.param.Location2D
+import org.bymc.gomoku.model.common.param.Size2D
 
 /**
  * 棋盘视图接口。

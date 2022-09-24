@@ -6,7 +6,7 @@ import org.bymc.gomoku.model.abstraction.Board
 import org.bymc.gomoku.model.abstraction.BoardView
 import org.bymc.gomoku.model.abstraction.History
 import org.bymc.gomoku.model.abstraction.Rule
-import org.bymc.gomoku.model.common.*
+import org.bymc.gomoku.model.common.param.*
 import java.util.Date
 
 /**
@@ -121,12 +121,12 @@ class GameImpl(
         updateSituationAfterRetraction()
     }
 
+    /**
+     * 交换回合执行方。
+     */
     private fun swapRoundActor() {
 
-        situation = situation.copy(roundActor = when (situation.roundActor) {
-            Stone.BLACK -> Stone.WHITE
-            Stone.WHITE -> Stone.BLACK
-        })
+        situation = situation.copy(roundActor = Stone.getOpponent(situation.roundActor))
     }
 
     /**
