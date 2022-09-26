@@ -39,6 +39,11 @@ class TtnhVerifier(
             return false
         }
 
+        // 如果满足五连珠，则不判定三三禁手。
+        if (GomokuVerifier(boardView, drop.location).verifyBeforeDrop(drop.stone)) {
+            return false
+        }
+
         // 获取测试单元格，统计活三的数量。大于 1 则满足三三禁手判定。
         return countAliveTriple(boardView.getCell(drop.location)) > 1
     }

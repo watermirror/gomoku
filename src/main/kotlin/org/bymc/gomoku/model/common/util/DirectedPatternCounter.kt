@@ -56,15 +56,16 @@ class DirectedPatternCounter(
      */
     fun count(): List<Int> {
 
-        if (countPattern.isEmpty()) {
-            return emptyList()
-        }
+        require(countPattern.isNotEmpty())
 
         val countList = ArrayList<Int>()
         var patternIndex = 0
         var tempCount = 0
 
-        for (cell in listOf(*originalCell.getNeighbors(direction).toTypedArray(), null)) {
+        val cells = listOf(*originalCell.getNeighbors(direction).toTypedArray(), null)
+        var cellIndex = 0
+        while (cellIndex < cells.size) {
+            val cell = cells[cellIndex]
             if (cell == null) {
                 countList.add(tempCount)
                 break
@@ -79,6 +80,7 @@ class DirectedPatternCounter(
                 continue
             }
             tempCount++
+            cellIndex++
         }
 
         for (i in countList.size until countPattern.size) {

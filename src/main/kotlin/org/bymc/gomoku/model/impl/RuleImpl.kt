@@ -99,6 +99,9 @@ class RuleImpl(
 
         for (x in 0 until boardView.getSize().width) {
             for (y in 0 until boardView.getSize().height) {
+                if (!boardView.getCell(Location2D(x, y)).isOccupied()) {
+                    continue
+                }
                 val state = judgeGameState(boardView, Location2D(x, y))
                 if (state != GameState.PLAYING) {
                     return state

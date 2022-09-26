@@ -39,6 +39,11 @@ class FfnhVerifier(
             return false
         }
 
+        // 如果满足五连珠，则不判定三三禁手。
+        if (GomokuVerifier(boardView, drop.location).verifyBeforeDrop(drop.stone)) {
+            return false
+        }
+
         // 获取测试单元格，统计活四和冲四的数量。大于 1 则满足四四禁手判定。
         val testedCell = boardView.getCell(drop.location)
         return countAliveTetrad(testedCell) + countHalfAliveTetrad(testedCell) > 1
@@ -127,7 +132,7 @@ class FfnhVerifier(
         val far = DirectedPatternCounter(testedCell, polar.farEnd, listOf(drop.stone, null, drop.stone)).count()
 
         // 断言。
-        require(near.size == 2 && far.size == 2)
+        require(near.size == 3 && far.size == 3)
 
         // 条件判定。
         return when {

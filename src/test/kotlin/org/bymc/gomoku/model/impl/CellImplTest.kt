@@ -1,5 +1,6 @@
 package org.bymc.gomoku.model.impl
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.bymc.gomoku.model.abstraction.BoardView
@@ -89,5 +90,19 @@ internal class CellImplTest {
         whenever(board.getSize()).thenReturn(Size2D(15, 15))
         val cell = CellImpl(board, Location2D(7, 14), Stone.BLACK)
         assertEquals(null, cell.getNeighbor(Direction.NORTHEAST))
+    }
+
+    @Test
+    fun getNeighbors() {
+
+        val board: BoardView = mock()
+        whenever(board.getSize()).thenReturn(Size2D(15, 15))
+        for (i in 8 .. 14) {
+            whenever(board.getCell(Location2D(i, 7))).thenReturn(CellImpl(board, Location2D(i, 7), Stone.WHITE))
+        }
+        val cell = CellImpl(board, Location2D(7, 7), Stone.BLACK)
+        val neighbors = cell.getNeighbors(Direction.EAST)
+        assertEquals(7, neighbors.size)
+        neighbors.forEach { assertEquals(Stone.WHITE, it.getStone()) }
     }
 }
