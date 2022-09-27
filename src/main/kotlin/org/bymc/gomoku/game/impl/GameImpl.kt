@@ -134,10 +134,11 @@ class GameImpl(
      */
     private fun updateSituationAfterDrop(lastDropLocation: Location2D) {
 
+        val gameState = rule.judgeGameState(board, lastDropLocation)
         situation = situation.copy(
-            state = rule.judgeGameState(board, lastDropLocation),
+            state = gameState,
             dropCount = history.getRecordCount(),
-            retractionAvailable = isRetractionAvailable(),
+            retractionAvailable = isRetractionAvailable() && gameState == GameState.PLAYING,
             lastDropTime = history.getLastRecord()?.getTime()
         ).let { if (it.state != GameState.PLAYING) { it.copy(endTime = Date()) } else { it } }
     }
@@ -160,9 +161,8 @@ class GameImpl(
     private fun isRetractionAvailable(): Boolean {
 
         return when {
-            history.getRecordCount() > 1 -> true
-            history.getRecordCount() == 0 -> false
-            else -> history.getLastRecord()!!.getDrop().stone == situation.roundActor
+            history.getRecordCount() < 2 -> false
+            else -> true
         }
     }
 }
