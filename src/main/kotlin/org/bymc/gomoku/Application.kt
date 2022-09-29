@@ -1,10 +1,12 @@
 package org.bymc.gomoku.model
 
+import org.bymc.gomoku.ui.MainWindow
+
 /**
  * 主程序。
  */
 fun main() {
 
-    // TODO(mc): 以下测试代码需要移除。
-    println("Gomoku from BYMC org..")
+    // 创建主窗口。
+    MainWindow()
 }
