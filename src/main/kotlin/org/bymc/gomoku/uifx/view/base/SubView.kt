@@ -1,4 +1,4 @@
-package org.bymc.gomoku.ui.view.base
+package org.bymc.gomoku.uifx.view.base
 
 /**
  * 子视图接口。

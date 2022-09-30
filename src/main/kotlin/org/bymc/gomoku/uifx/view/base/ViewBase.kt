@@ -1,4 +1,4 @@
-package org.bymc.gomoku.ui.view.base
+package org.bymc.gomoku.uifx.view.base
 
 import java.awt.*
 
@@ -63,7 +63,7 @@ abstract class ViewBase(
 
         // 触发 Resize 事件。
         if (originalArea.size != area.size) {
-            onResize(originalArea.size, area.size)
+            onResized(originalArea.size, area.size)
         }
 
         // 调度渲染。
@@ -242,9 +242,24 @@ abstract class ViewBase(
     override fun onRButtonReleased(position: Point) {}
 
     /**
+     * 滑鼠进入视图。
+     */
+    override fun onMouseEntered() {}
+
+    /**
+     * 滑鼠离开视图。
+     */
+    override fun onMouseExited() {}
+
+    /**
+     * 滑鼠在视图上移动。
+     */
+    override fun onMouseMoved(position: Point) {}
+
+    /**
      * 视图尺寸变化。
      */
-    override fun onResize(originalSize: Dimension, newSize: Dimension) {}
+    override fun onResized(originalSize: Dimension, newSize: Dimension) {}
 
     /**
      * 设置父视图。

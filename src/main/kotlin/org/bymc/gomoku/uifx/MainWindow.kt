@@ -1,8 +1,8 @@
-package org.bymc.gomoku.ui
+package org.bymc.gomoku.uifx
 
-import org.bymc.gomoku.ui.view.LabelView
-import org.bymc.gomoku.ui.window.RootViewWindowBase
-import org.bymc.gomoku.ui.window.WindowInitialConfig
+import org.bymc.gomoku.uifx.view.LabelView
+import org.bymc.gomoku.uifx.window.RootViewWindowBase
+import org.bymc.gomoku.uifx.window.WindowInitialConfig
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.Point
@@ -23,9 +23,9 @@ class MainWindow : RootViewWindowBase(
     )
 ) {
 
-    private val labelView: LabelView = LabelView("Hello god of world.", Rectangle(10, 10, 200, 20), true, Color.WHITE)
+    private val labelView: LabelView = LabelView("Label A", Rectangle(10, 10, 200, 20), true, Color.WHITE)
 
-    private val labelView2: LabelView = LabelView("Hello god of world.", Rectangle(10, 40, 200, 20), true, null)
+    private val labelView2: LabelView = LabelView("Label B", Rectangle(10, 40, 200, 20), true, null)
 
     init {
         getRootView().appendSubView(labelView)

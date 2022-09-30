@@ -1,6 +1,6 @@
 package org.bymc.gomoku.model
 
-import org.bymc.gomoku.ui.MainWindow
+import org.bymc.gomoku.uifx.MainWindow
 
 /**
  * 主程序。

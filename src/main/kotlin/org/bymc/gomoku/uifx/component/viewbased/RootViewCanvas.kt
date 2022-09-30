@@ -1,7 +1,7 @@
-package org.bymc.gomoku.ui.component
+package org.bymc.gomoku.uifx.component.viewbased
 
-import org.bymc.gomoku.ui.view.base.SubView
-import org.bymc.gomoku.ui.view.base.View
+import org.bymc.gomoku.uifx.view.base.SubView
+import org.bymc.gomoku.uifx.view.base.View
 import java.awt.*
 
 /**
@@ -25,9 +25,9 @@ class RootViewCanvas(
     /**
      * 可交互性。
      */
-    private var theInteractive: Boolean = true
+    private var theInteractive: Boolean = true,
 
-) : View, Canvas() {
+) : Canvas(), View {
 
     /**
      * 子视图。
@@ -38,8 +38,15 @@ class RootViewCanvas(
      * 初始化对象。
      */
     init {
+
+        // 设定位置、尺寸和背景色。
         bounds = area
         background = bgColor
+
+        // 监听事件。
+        val awtListener = ViewAwtEventProcessor(this)
+        addMouseListener(awtListener)
+        addMouseMotionListener(awtListener)
     }
 
     /**
@@ -195,9 +202,24 @@ class RootViewCanvas(
     override fun onRButtonReleased(position: Point) {}
 
     /**
+     * 滑鼠进入视图。
+     */
+    override fun onMouseEntered() {}
+
+    /**
+     * 滑鼠离开视图。
+     */
+    override fun onMouseExited() {}
+
+    /**
+     * 滑鼠在视图上移动。
+     */
+    override fun onMouseMoved(position: Point) {}
+
+    /**
      * 视图尺寸变化。
      */
-    override fun onResize(originalSize: Dimension, newSize: Dimension) {}
+    override fun onResized(originalSize: Dimension, newSize: Dimension) {}
 
     /**
      * Returns true if this component is painted to an offscreen image

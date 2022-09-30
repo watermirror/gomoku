@@ -1,4 +1,4 @@
-package org.bymc.gomoku.ui.view.base
+package org.bymc.gomoku.uifx.view.base
 
 import java.awt.Color
 import java.awt.Dimension
@@ -110,7 +110,22 @@ interface View {
     fun onRButtonReleased(position: Point)
 
     /**
+     * 滑鼠进入视图。
+     */
+    fun onMouseEntered()
+
+    /**
+     * 滑鼠离开视图。
+     */
+    fun onMouseExited()
+
+    /**
+     * 滑鼠在视图上移动。
+     */
+    fun onMouseMoved(position: Point)
+
+    /**
      * 视图尺寸变化。
      */
-    fun onResize(originalSize: Dimension, newSize: Dimension)
+    fun onResized(originalSize: Dimension, newSize: Dimension)
 }

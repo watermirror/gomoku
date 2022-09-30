@@ -1,8 +1,7 @@
-package org.bymc.gomoku.ui.window
+package org.bymc.gomoku.uifx.window
 
-import org.bymc.gomoku.ui.component.RootViewCanvas
-import org.bymc.gomoku.ui.view.base.View
-import java.awt.Color
+import org.bymc.gomoku.uifx.component.viewbased.RootViewCanvas
+import org.bymc.gomoku.uifx.view.base.View
 import java.awt.Dimension
 import java.awt.Rectangle
 import java.awt.event.ComponentEvent

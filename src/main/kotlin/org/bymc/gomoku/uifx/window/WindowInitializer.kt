@@ -1,4 +1,4 @@
-package org.bymc.gomoku.ui.window
+package org.bymc.gomoku.uifx.window
 
 import java.awt.Frame
 import java.awt.event.WindowAdapter
