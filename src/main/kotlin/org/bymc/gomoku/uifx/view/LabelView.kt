@@ -1,6 +1,7 @@
 package org.bymc.gomoku.uifx.view
 
 import org.bymc.gomoku.uifx.view.base.ViewBase
+import org.bymc.gomoku.uifx.view.common.BorderConfig
 import org.bymc.gomoku.uifx.view.common.FontConfig
 import org.bymc.gomoku.uifx.view.common.HorizontalAlignment
 import org.bymc.gomoku.uifx.view.common.VerticalAlignment
@@ -67,7 +68,12 @@ class LabelView(
     /**
      * 字体配置。
      */
-    private var fontConfig: FontConfig = FontConfig()
+    private var fontConfig: FontConfig = FontConfig(),
+
+    /**
+     * 边框配置。
+     */
+    private var borderConfig: BorderConfig = BorderConfig()
 
 ) : ViewBase(area, showing, bgColor, interactive) {
 
@@ -156,16 +162,33 @@ class LabelView(
     }
 
     /**
+     * 获取边框配置。
+     */
+    fun getBorderConfig(): BorderConfig = borderConfig
+
+    /**
+     * 设置边框配置。
+     */
+    fun setBorderConfig(borderConfig: BorderConfig) {
+
+        this.borderConfig = borderConfig
+        scheduleRender(null)
+    }
+
+    /**
      * 渲染。
      */
     override fun onRender(g: Graphics, range: Rectangle) {
 
+        // 绘制边框。
+        if (borderConfig.borderWidth > 0) {
+            renderBorder(g)
+        }
+
         // 计算内嵌后的绘制区域。
         val area = Rectangle(
-            insets.left,
-            insets.top,
-            getArea().width - insets.left - insets.right,
-            getArea().height - insets.top - insets.bottom
+            insets.left, insets.top,
+            getArea().width - insets.left - insets.right, getArea().height - insets.top - insets.bottom
         )
 
         // 绘制文本。
@@ -206,4 +229,17 @@ class LabelView(
      * 滑鼠在视图上移动。
      */
     override fun onMouseMoved(position: Point) {}
+
+    /**
+     * 绘制边框。
+     */
+    private fun renderBorder(g: Graphics) {
+
+        val originalColor = g.color
+        g.color = borderConfig.borderColor
+        for (i in 0 until borderConfig.borderWidth) {
+            g.drawRect(i, i, getArea().width - 2 * i, getArea().height - 2 * i)
+        }
+        g.color = originalColor
+    }
 }
