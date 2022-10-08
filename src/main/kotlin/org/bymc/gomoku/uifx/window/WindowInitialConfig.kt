@@ -22,7 +22,12 @@ data class WindowInitialConfig(
     val resizable: Boolean = true,
 
     /**
-     * 初始远点坐标。
+     * 初始时窗口是否居中。
+     */
+    val central: Boolean = false,
+
+    /**
+     * 初始原点坐标，central 为 false 时生效。
      */
     val origin: Point = Point(0, 0),
 

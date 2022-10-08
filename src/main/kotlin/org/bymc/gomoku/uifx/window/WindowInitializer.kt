@@ -1,6 +1,7 @@
 package org.bymc.gomoku.uifx.window
 
 import java.awt.Frame
+import java.awt.Toolkit
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 
@@ -77,6 +78,10 @@ class WindowInitializer(
             )
             false -> window.setBounds(config.origin.x, config.origin.y, config.size.width, config.size.height)
         }
+
+        if (config.central) {
+            moveToCenter()
+        }
     }
 
     /**
@@ -85,5 +90,20 @@ class WindowInitializer(
     private fun configVisible() {
 
         window.isVisible = config.visible
+    }
+
+    /**
+     * 将窗口移动到屏幕中心。
+     */
+    private fun moveToCenter() {
+
+        val screenSize = Toolkit.getDefaultToolkit().screenSize
+        val bounds = window.bounds
+        window.setBounds(
+            (screenSize.width - bounds.width) / 2,
+            (screenSize.height - bounds.height) / 2,
+            bounds.width,
+            bounds.height
+        )
     }
 }

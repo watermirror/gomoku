@@ -2,6 +2,7 @@ package org.bymc.gomoku.model
 
 import org.bymc.gomoku.uifx.ViewTestingWindow
 import org.bymc.gomoku.uifx.util.FrameworksInitializer
+import java.awt.Toolkit
 
 /**
  * 主程序。

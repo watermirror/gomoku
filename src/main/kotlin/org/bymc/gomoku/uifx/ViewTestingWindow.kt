@@ -6,7 +6,6 @@ import org.bymc.gomoku.uifx.window.RootViewWindowBase
 import org.bymc.gomoku.uifx.window.WindowInitialConfig
 import java.awt.Color
 import java.awt.Dimension
-import java.awt.Point
 import java.awt.Rectangle
 
 /**
@@ -18,7 +17,7 @@ import java.awt.Rectangle
 class ViewTestingWindow : RootViewWindowBase(
     WindowInitialConfig(
         resizable = true,
-        origin = Point(100, 100),
+        central = true,
         explicitClientSize = true,
         size = Dimension(500, 500)
     )
