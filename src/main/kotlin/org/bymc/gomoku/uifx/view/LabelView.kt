@@ -5,11 +5,14 @@ import org.bymc.gomoku.uifx.view.common.BorderConfig
 import org.bymc.gomoku.uifx.view.common.FontConfig
 import org.bymc.gomoku.uifx.view.common.HorizontalAlignment
 import org.bymc.gomoku.uifx.view.common.VerticalAlignment
-import org.bymc.gomoku.uifx.view.util.TextPainter
+import org.bymc.gomoku.uifx.view.util.mouse.MouseInteractiveViewDisplayState
+import org.bymc.gomoku.uifx.view.util.mouse.MouseInteractiveEventListener
+import org.bymc.gomoku.uifx.view.util.mouse.MouseInteractiveStateTracker
+import org.bymc.gomoku.uifx.view.util.mouse.MouseInteractiveViewArea
+import org.bymc.gomoku.uifx.view.util.painter.TextPainter
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.Insets
-import java.awt.Point
 import java.awt.Rectangle
 
 /**
@@ -75,7 +78,48 @@ class LabelView(
      */
     private var borderConfig: BorderConfig = BorderConfig()
 
-) : ViewBase(area, showing, bgColor, interactive) {
+) : ViewBase(area, showing, bgColor, interactive), MouseInteractiveViewArea, MouseInteractiveEventListener {
+
+    /**
+     * 事件监听器列表。
+     */
+    private val listeners: MutableList<LabelViewEventListener> = ArrayList()
+
+    /**
+     * 滑鼠状态跟踪器。
+     */
+    private val mouseTracker = MouseInteractiveStateTracker(this, this)
+
+    init {
+
+        /**
+         * 注册滑鼠事件处理器。
+         */
+        this.addMouseEventHandler(mouseTracker)
+    }
+
+    /**
+     * 添加事件监听器。
+     */
+    fun addEventListener(listener: LabelViewEventListener) {
+
+        if (listeners.contains(listener)) {
+            return
+        }
+        listeners.add(listener)
+    }
+
+    /**
+     * 移除事件监听器。
+     */
+    fun removeEventListener(listener: LabelViewEventListener) {
+
+        val index = listeners.indexOf(listener)
+        if (index < 0) {
+            return
+        }
+        listeners.removeAt(index)
+    }
 
     /**
      * 获取标签内容。
@@ -196,39 +240,34 @@ class LabelView(
     }
 
     /**
-     * 滑鼠左键按下。
+     * 获取滑鼠交互的视图区域，应与滑鼠事件处于同一个坐标系内。
      */
-    override fun onLButtonPressed(position: Point) {}
+    override fun getViewArea(): Rectangle = Rectangle(0, 0, getArea().width, getArea().height)
 
     /**
-     * 滑鼠左键释放。
+     * 左键点击事件。
      */
-    override fun onLButtonReleased(position: Point) {}
+    override fun onLeftClicked() = listeners.forEach { it.onLeftButtonClicked(this) }
 
     /**
-     * 滑鼠右键按下。
+     * 右键点击事件。
      */
-    override fun onRButtonPressed(position: Point) {}
+    override fun onRightClicked() = listeners.forEach { it.onRightButtonClicked(this) }
 
     /**
-     * 滑鼠右键释放。
+     * 左键双击事件。
      */
-    override fun onRButtonReleased(position: Point) {}
+    override fun onLeftDoubleClicked() = listeners.forEach { it.onLeftButtonDoubleClicked(this) }
 
     /**
-     * 滑鼠进入视图。
+     * 右键双击事件。
      */
-    override fun onMouseEntered() {}
+    override fun onRightDoubleClicked() = listeners.forEach { it.onRightButtonDoubleClicked(this) }
 
     /**
-     * 滑鼠离开视图。
+     * 滑鼠交互显示状态变更事件。
      */
-    override fun onMouseExited() {}
-
-    /**
-     * 滑鼠在视图上移动。
-     */
-    override fun onMouseMoved(position: Point) {}
+    override fun onDisplayStateChanged(original: MouseInteractiveViewDisplayState, current: MouseInteractiveViewDisplayState) {}
 
     /**
      * 绘制边框。

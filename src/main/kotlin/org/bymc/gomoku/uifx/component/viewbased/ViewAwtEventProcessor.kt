@@ -30,6 +30,21 @@ class ViewAwtEventProcessor(
 ) : AwtEventListener {
 
     /**
+     * 下压点击数偏移值。
+     */
+    private var clickCountOffSet: Int = 0
+
+    /**
+     * 下压点击数系统值。
+     */
+    private var systemClickCount: Int = 0
+
+    /**
+     * 正在统计的下压滑鼠按钮。取之 BUTTON1 或 BUTTON3。
+     */
+    private var countedMouseButton: Int = 0
+
+    /**
      * Invoked when the mouse button has been clicked (pressed
      * and released) on a component.
      * @param e the event to be processed
@@ -42,8 +57,9 @@ class ViewAwtEventProcessor(
      */
     override fun mousePressed(e: MouseEvent?) {
 
-        // 非左右键，不处理；否则进行命中检测。
+        // 非左右键，重置下压计数，不做其他处理；否则进行命中检测。
         if (e!!.button !in arrayOf(MouseEvent.BUTTON1, MouseEvent.BUTTON3)) {
+            resetClickCount()
             return
         }
         val hitTest = HitTester(rootView, e.point).test()
@@ -53,17 +69,21 @@ class ViewAwtEventProcessor(
         if (handoverHoveredView(hitTest.getHitView())) {
             // 如果悬停视图变更了，向新悬停视图发送滑鼠移动通知。
             hitTest.getHitView()?.onMouseMoved(hitTest.getRelativePosition()!!)
+            // 并重置下压计数。
+            resetClickCount()
         }
 
-        // 若没有命中，直接返回。
-        if (hitTest.isEmpty()) {
-            return
-        }
+        // 更新下压计数。
+        updateClickCount(e.button, e.clickCount)
 
         // 通知视图。
-        when (e.button) {
-            MouseEvent.BUTTON1 -> hitTest.getHitView()!!.onLButtonPressed(hitTest.getRelativePosition()!!)
-            MouseEvent.BUTTON3 -> hitTest.getHitView()!!.onRButtonPressed(hitTest.getRelativePosition()!!)
+        if (hitTest.isNotEmpty()) {
+            when (e.button) {
+                MouseEvent.BUTTON1 ->
+                    hitTest.getHitView()!!.onLButtonPressed(hitTest.getRelativePosition()!!, getCurrentClickCount())
+                MouseEvent.BUTTON3 ->
+                    hitTest.getHitView()!!.onRButtonPressed(hitTest.getRelativePosition()!!, getCurrentClickCount())
+            }
         }
     }
 
@@ -78,18 +98,19 @@ class ViewAwtEventProcessor(
             return
         }
 
-        // 变更捕获视图。
-        val originalCapturedView = handoverCapturedView(null)
-        require(originalCapturedView != null)
-
-        // 计算滑鼠相对于原捕获视图的坐标，若原捕获视图离根、不可见或不可交互，则得到空坐标，直接返回。
-        val relativePosition = PositionCalculator(originalCapturedView, rootView, e.point).calculate() ?: return
+        // 计算滑鼠相对于原捕获视图的坐标，若原捕获视图离根、不可见或不可交互，则得到空坐标。
+        val relativePosition = PositionCalculator(capturedView!!, rootView, e.point).calculate()
 
         // 通知视图。
-        when (e.button) {
-            MouseEvent.BUTTON1 -> originalCapturedView.onLButtonReleased(relativePosition)
-            MouseEvent.BUTTON3 -> originalCapturedView.onRButtonReleased(relativePosition)
+        if (relativePosition != null) {
+            when (e.button) {
+                MouseEvent.BUTTON1 -> capturedView!!.onLButtonReleased(relativePosition)
+                MouseEvent.BUTTON3 -> capturedView!!.onRButtonReleased(relativePosition)
+            }
         }
+
+        // 变更捕获视图。
+        handoverCapturedView(null)
 
         // 命中检测并变更悬停视图。
         val hitTest = HitTester(rootView, e.point).test()
@@ -190,7 +211,54 @@ class ViewAwtEventProcessor(
         val originalView = this.capturedView
         this.capturedView = capturedView
 
+        // 事件通知。
+        if (originalView != capturedView) {
+            originalView?.onCaptureLost()
+            capturedView?.onCaptureGot()
+        }
+
         // 返回原捕获视图。
         return originalView
     }
+
+    /**
+     * 更新下压计数。
+     */
+    private fun updateClickCount(pressedButton: Int, systemCount: Int) {
+
+        if (pressedButton != countedMouseButton) {
+            resetClickCount()
+        }
+
+        if (systemCount <= systemClickCount) {
+            return beginCount(pressedButton, systemCount)
+        }
+
+        systemClickCount = systemCount
+    }
+
+    /**
+     * 重置下压计数。
+     */
+    private fun resetClickCount() {
+
+        clickCountOffSet = 0
+        systemClickCount = 0
+        countedMouseButton = 0
+    }
+
+    /**
+     * 开始一轮下压计数。
+     */
+    private fun beginCount(pressedButton: Int, systemCount: Int) {
+
+        clickCountOffSet = 1 - systemCount
+        systemClickCount = systemCount
+        countedMouseButton = pressedButton
+    }
+
+    /**
+     * 获取当前下压计数。
+     */
+    private fun getCurrentClickCount(): Int = systemClickCount + clickCountOffSet
 }

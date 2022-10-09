@@ -3,7 +3,6 @@ package org.bymc.gomoku.uifx.view.base
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.Graphics
-import java.awt.Point
 import java.awt.Rectangle
 
 /**
@@ -12,7 +11,7 @@ import java.awt.Rectangle
  * @author: zheng.chez
  * @since: 2022/09/27
  */
-interface View {
+interface View : MouseEventHandler {
 
     /**
      * 获取视图位置和尺寸。
@@ -88,41 +87,6 @@ interface View {
      * 渲染。
      */
     fun onRender(g: Graphics, range: Rectangle)
-
-    /**
-     * 滑鼠左键按下。
-     */
-    fun onLButtonPressed(position: Point)
-
-    /**
-     * 滑鼠左键释放。
-     */
-    fun onLButtonReleased(position: Point)
-
-    /**
-     * 滑鼠右键按下。
-     */
-    fun onRButtonPressed(position: Point)
-
-    /**
-     * 滑鼠右键释放。
-     */
-    fun onRButtonReleased(position: Point)
-
-    /**
-     * 滑鼠进入视图。
-     */
-    fun onMouseEntered()
-
-    /**
-     * 滑鼠离开视图。
-     */
-    fun onMouseExited()
-
-    /**
-     * 滑鼠在视图上移动。
-     */
-    fun onMouseMoved(position: Point)
 
     /**
      * 视图尺寸变化。

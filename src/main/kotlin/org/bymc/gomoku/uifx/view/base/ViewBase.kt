@@ -43,6 +43,34 @@ abstract class ViewBase(
     private var parentView: View? = null
 
     /**
+     * 滑鼠事件处理器列表。
+     */
+    private val mouseEventHandlers: MutableList<MouseEventHandler> = ArrayList()
+
+    /**
+     * 添加滑鼠事件处理器。
+     */
+    fun addMouseEventHandler(handler: MouseEventHandler) {
+
+        if (mouseEventHandlers.contains(handler)) {
+            return
+        }
+        mouseEventHandlers.add(handler)
+    }
+
+    /**
+     * 移除滑鼠事件处理器。
+     */
+    fun removeMouseEventHandler(handler: MouseEventHandler) {
+
+        val index = mouseEventHandlers.indexOf(handler)
+        if (index < 0) {
+            return
+        }
+        mouseEventHandlers.removeAt(index)
+    }
+
+    /**
      * 获取视图位置和尺寸。
      */
     final override fun getArea(): Rectangle = theArea
@@ -222,44 +250,56 @@ abstract class ViewBase(
     override fun onRender(g: Graphics, range: Rectangle) {}
 
     /**
+     * 视图尺寸变化。
+     */
+    override fun onResized(originalSize: Dimension, newSize: Dimension) {}
+
+    /**
      * 滑鼠左键按下。
      */
-    override fun onLButtonPressed(position: Point) {}
+    override fun onLButtonPressed(position: Point, pressedCount: Int) =
+        mouseEventHandlers.forEach { it.onLButtonPressed(position, pressedCount) }
 
     /**
      * 滑鼠左键释放。
      */
-    override fun onLButtonReleased(position: Point) {}
+    override fun onLButtonReleased(position: Point) = mouseEventHandlers.forEach { it.onLButtonReleased(position) }
 
     /**
      * 滑鼠右键按下。
      */
-    override fun onRButtonPressed(position: Point) {}
+    override fun onRButtonPressed(position: Point, pressedCount: Int) =
+        mouseEventHandlers.forEach { it.onRButtonPressed(position, pressedCount) }
 
     /**
      * 滑鼠右键释放。
      */
-    override fun onRButtonReleased(position: Point) {}
+    override fun onRButtonReleased(position: Point) = mouseEventHandlers.forEach { it.onRButtonReleased(position) }
 
     /**
      * 滑鼠进入视图。
      */
-    override fun onMouseEntered() {}
+    override fun onMouseEntered() = mouseEventHandlers.forEach { it.onMouseEntered() }
 
     /**
      * 滑鼠离开视图。
      */
-    override fun onMouseExited() {}
+    override fun onMouseExited() = mouseEventHandlers.forEach { it.onMouseExited() }
 
     /**
      * 滑鼠在视图上移动。
      */
-    override fun onMouseMoved(position: Point) {}
+    override fun onMouseMoved(position: Point) = mouseEventHandlers.forEach { it.onMouseMoved(position) }
 
     /**
-     * 视图尺寸变化。
+     * 成为捕获视图。
      */
-    override fun onResized(originalSize: Dimension, newSize: Dimension) {}
+    override fun onCaptureGot() = mouseEventHandlers.forEach { it.onCaptureGot() }
+
+    /**
+     * 不再是捕获视图。
+     */
+    override fun onCaptureLost() = mouseEventHandlers.forEach { it.onCaptureLost() }
 
     /**
      * 设置父视图。

@@ -182,9 +182,14 @@ class RootViewCanvas(
     override fun onRender(g: Graphics, range: Rectangle) {}
 
     /**
+     * 视图尺寸变化。
+     */
+    override fun onResized(originalSize: Dimension, newSize: Dimension) {}
+
+    /**
      * 滑鼠左键按下。
      */
-    override fun onLButtonPressed(position: Point) {}
+    override fun onLButtonPressed(position: Point, pressedCount: Int) {}
 
     /**
      * 滑鼠左键释放。
@@ -194,7 +199,7 @@ class RootViewCanvas(
     /**
      * 滑鼠右键按下。
      */
-    override fun onRButtonPressed(position: Point) {}
+    override fun onRButtonPressed(position: Point, pressedCount: Int) {}
 
     /**
      * 滑鼠右键释放。
@@ -217,9 +222,14 @@ class RootViewCanvas(
     override fun onMouseMoved(position: Point) {}
 
     /**
-     * 视图尺寸变化。
+     * 成为捕获视图。
      */
-    override fun onResized(originalSize: Dimension, newSize: Dimension) {}
+    override fun onCaptureGot() {}
+
+    /**
+     * 不再是捕获视图。
+     */
+    override fun onCaptureLost() {}
 
     /**
      * Returns true if this component is painted to an offscreen image

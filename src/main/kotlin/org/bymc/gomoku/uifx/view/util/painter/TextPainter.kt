@@ -1,6 +1,5 @@
-package org.bymc.gomoku.uifx.view.util
+package org.bymc.gomoku.uifx.view.util.painter
 
-import org.bymc.gomoku.uifx.view.base.View
 import org.bymc.gomoku.uifx.view.common.FontConfig
 import org.bymc.gomoku.uifx.view.common.HorizontalAlignment
 import org.bymc.gomoku.uifx.view.common.VerticalAlignment
