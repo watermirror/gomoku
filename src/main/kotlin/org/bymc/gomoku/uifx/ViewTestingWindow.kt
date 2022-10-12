@@ -2,6 +2,9 @@ package org.bymc.gomoku.uifx
 
 import org.bymc.gomoku.uifx.view.LabelView
 import org.bymc.gomoku.uifx.view.LabelViewEventListener
+import org.bymc.gomoku.uifx.view.SimpleTextButtonView
+import org.bymc.gomoku.uifx.view.base.ButtonViewBase
+import org.bymc.gomoku.uifx.view.base.ButtonViewEventListener
 import org.bymc.gomoku.uifx.view.common.BorderConfig
 import org.bymc.gomoku.uifx.window.RootViewWindowBase
 import org.bymc.gomoku.uifx.window.WindowInitialConfig
@@ -22,7 +25,7 @@ class ViewTestingWindow : RootViewWindowBase(
         explicitClientSize = true,
         size = Dimension(500, 500)
     )
-), LabelViewEventListener {
+), LabelViewEventListener, ButtonViewEventListener {
 
     private val labelView: LabelView = LabelView(
         "Label A, Hello", Color.BLACK, Rectangle(10, 10, 200, 20), true, Color.LIGHT_GRAY,
@@ -33,17 +36,30 @@ class ViewTestingWindow : RootViewWindowBase(
         "Label B", Color.DARK_GRAY, Rectangle(10, 40, 200, 20), true, Color.LIGHT_GRAY
     )
 
+    private val simpleTextButtonView: SimpleTextButtonView = SimpleTextButtonView(
+        "Click Me", Rectangle(10, 70, 100, 30)
+    )
+
+    private val simpleTextButtonView2: SimpleTextButtonView = SimpleTextButtonView(
+        "Click Me 2", Rectangle(10, 110, 100, 30)
+    )
+
     /**
      * 添加子视图。
      */
     init {
         getRootView().appendSubView(labelView)
         getRootView().appendSubView(labelView2)
+        getRootView().appendSubView(simpleTextButtonView)
+        getRootView().appendSubView(simpleTextButtonView2)
     }
 
     init {
         labelView.addEventListener(this)
         labelView2.addEventListener(this)
+        simpleTextButtonView.addEventListener(this)
+        simpleTextButtonView2.addEventListener(this)
+        simpleTextButtonView2.disable()
     }
 
     /**
@@ -76,5 +92,15 @@ class ViewTestingWindow : RootViewWindowBase(
     override fun onRightButtonDoubleClicked(sender: LabelView) {
 
         println("onRightButtonDoubleClicked: ${sender.getText()}")
+    }
+
+    /**
+     * 按钮点击事件。
+     */
+    override fun onClicked(sender: ButtonViewBase) {
+
+        println("onClicked: ${
+            (sender as? SimpleTextButtonView)?.getButtonTextConfig()?.getNormalConfig()?.text ?: "a button"
+        }")
     }
 }
