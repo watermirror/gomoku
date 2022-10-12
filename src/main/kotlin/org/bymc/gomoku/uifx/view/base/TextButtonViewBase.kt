@@ -2,8 +2,8 @@ package org.bymc.gomoku.uifx.view.base
 
 import org.bymc.gomoku.uifx.view.common.ButtonTextConfig
 import org.bymc.gomoku.uifx.view.common.TextConfig
-import org.bymc.gomoku.uifx.view.util.mouse.MouseInteractiveViewDisplayState
-import org.bymc.gomoku.uifx.view.util.painter.TextPainter
+import org.bymc.gomoku.uifx.view.mouse.MouseInteractiveViewDisplayState
+import org.bymc.gomoku.uifx.view.painter.TextPainter
 import java.awt.Graphics
 import java.awt.Insets
 import java.awt.Rectangle

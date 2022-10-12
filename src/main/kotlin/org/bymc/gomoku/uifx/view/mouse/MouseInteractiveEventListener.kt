@@ -1,4 +1,4 @@
-package org.bymc.gomoku.uifx.view.util.mouse
+package org.bymc.gomoku.uifx.view.mouse
 
 /**
  * 滑鼠交互事件监听器。

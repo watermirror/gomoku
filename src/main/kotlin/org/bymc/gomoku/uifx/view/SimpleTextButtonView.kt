@@ -2,7 +2,7 @@ package org.bymc.gomoku.uifx.view
 
 import org.bymc.gomoku.uifx.view.base.TextButtonViewBase
 import org.bymc.gomoku.uifx.view.common.*
-import org.bymc.gomoku.uifx.view.util.mouse.MouseInteractiveViewDisplayState
+import org.bymc.gomoku.uifx.view.mouse.MouseInteractiveViewDisplayState
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.Rectangle

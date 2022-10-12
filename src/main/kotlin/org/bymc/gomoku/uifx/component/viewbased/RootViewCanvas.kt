@@ -2,6 +2,7 @@ package org.bymc.gomoku.uifx.component.viewbased
 
 import org.bymc.gomoku.uifx.view.base.SubView
 import org.bymc.gomoku.uifx.view.base.View
+import org.bymc.gomoku.uifx.view.base.ViewBase
 import java.awt.*
 
 /**
@@ -117,20 +118,51 @@ class RootViewCanvas(
     /**
      * 加入子视图，重复加入会抛异常。
      */
-    override fun appendSubView(subView: View) {
+    override fun addSubView(subView: View) {
 
         require(subView != this)
         require(subView as? SubView != null)
         if (containDescendantView(subView)) {
-            throw RuntimeException("trying to append a duplicated descendant view")
+            throw RuntimeException("trying to add a duplicated descendant view")
         }
 
         subViews.add(subView)
-        (subView as? SubView)?.setParent(this)
+        setParentInternally(subView)
+    }
 
-        if (getShowing() && subView.getShowing()) {
-            scheduleRender(subView.getArea())
+    /**
+     * 在锚点视图之后插入视图。
+     */
+    override fun addSubViewAfter(subView: View, anchor: View) {
+
+        require(subView != this)
+        require(subView as? SubView != null)
+        if (containDescendantView(subView)) {
+            throw RuntimeException("trying to add a duplicated descendant view")
         }
+
+        val realAnchor = (anchor as? ViewBase)?.getShadowView() ?: anchor
+        addSubViewAfterInternally(subView, realAnchor)
+    }
+
+    /**
+     * 在锚点视图之前插入视图。
+     */
+    override fun addSubViewBefore(subView: View, anchor: View) {
+
+        require(subView != this)
+        require(subView as? SubView != null)
+        if (containDescendantView(subView)) {
+            throw RuntimeException("trying to add a duplicated descendant view")
+        }
+
+        val index = subViews.indexOf(anchor)
+        if (index < 0) {
+            throw RuntimeException("try to add a sub view at a illegal position")
+        }
+
+        subViews.add(index, subView)
+        setParentInternally(subView)
     }
 
     /**
@@ -145,8 +177,9 @@ class RootViewCanvas(
 
         (subView as? SubView)?.setParent(null)
         subViews.removeAt(index)
+        (subView as? SubView)?.onDetached(this)
 
-        if (getShowing() && subView.getShowing()) {
+        if (subView.getShowing()) {
             scheduleRender(subView.getArea())
         }
     }
@@ -163,6 +196,10 @@ class RootViewCanvas(
 
         if (range == null) {
             return repaint()
+        }
+
+        if (range.width == 0 || range.height == 0) {
+            return
         }
 
         val bufferedImage = createVolatileImage(range.width, range.height)
@@ -182,54 +219,69 @@ class RootViewCanvas(
     override fun onRender(g: Graphics, range: Rectangle) {}
 
     /**
+     * 移动事件。
+     */
+    override fun onMoved(originalPosition: Point, newPosition: Point) {}
+
+    /**
      * 视图尺寸变化。
      */
     override fun onResized(originalSize: Dimension, newSize: Dimension) {}
 
     /**
+     * 显示事件。
+     */
+    override fun onVisible() {}
+
+    /**
+     * 隐藏事件。
+     */
+    override fun onHidden() {}
+
+    /**
      * 滑鼠左键按下。
      */
-    override fun onLButtonPressed(position: Point, pressedCount: Int) {}
+    override fun onLButtonPressed(sender: View, position: Point, pressedCount: Int) {}
 
     /**
      * 滑鼠左键释放。
      */
-    override fun onLButtonReleased(position: Point) {}
+    override fun onLButtonReleased(sender: View, position: Point) {}
 
     /**
      * 滑鼠右键按下。
      */
-    override fun onRButtonPressed(position: Point, pressedCount: Int) {}
+    override fun onRButtonPressed(sender: View, position: Point, pressedCount: Int) {}
 
     /**
      * 滑鼠右键释放。
      */
-    override fun onRButtonReleased(position: Point) {}
+    override fun onRButtonReleased(sender: View, position: Point) {}
 
     /**
      * 滑鼠进入视图。
      */
-    override fun onMouseEntered() {}
+    override fun onMouseEntered(sender: View) {}
 
     /**
      * 滑鼠离开视图。
      */
-    override fun onMouseExited() {}
+    override fun onMouseExited(sender: View) {}
 
     /**
      * 滑鼠在视图上移动。
      */
-    override fun onMouseMoved(position: Point) {}
+    override fun onMouseMoved(sender: View, position: Point) {}
 
     /**
      * 成为捕获视图。
      */
-    override fun onCaptureGot() {}
+    override fun onCaptureGot(sender: View) {}
 
     /**
      * 不再是捕获视图。
      */
-    override fun onCaptureLost() {}
+    override fun onCaptureLost(sender: View) {}
 
     /**
      * Returns true if this component is painted to an offscreen image
@@ -270,6 +322,33 @@ class RootViewCanvas(
     private fun renderViewTree(gfx: Graphics, range: Rectangle?) {
 
         recursivelyRender(this, gfx, range ?: Rectangle(0, 0, getArea().width, getArea().height))
+    }
+
+    /**
+     * 在锚点视图后插入视图。
+     */
+    private fun addSubViewAfterInternally(subView: View, anchor: View) {
+
+        val index = subViews.indexOf(anchor)
+        if (index < 0) {
+            throw RuntimeException("try to add a sub view at a illegal position")
+        }
+
+        subViews.add(index + 1, subView)
+        setParentInternally(subView)
+    }
+
+    /**
+     * 设置子视图的父视图。
+     */
+    private fun setParentInternally(subView: View) {
+
+        (subView as? SubView)?.setParent(this)
+        (subView as? SubView)?.onAttached(this)
+
+        if (subView.getShowing()) {
+            scheduleRender(subView.getArea())
+        }
     }
 
     companion object {

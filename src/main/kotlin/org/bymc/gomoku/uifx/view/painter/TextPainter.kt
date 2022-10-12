@@ -1,4 +1,4 @@
-package org.bymc.gomoku.uifx.view.util.painter
+package org.bymc.gomoku.uifx.view.painter
 
 import org.bymc.gomoku.uifx.view.common.FontConfig
 import org.bymc.gomoku.uifx.view.common.HorizontalAlignment

@@ -5,11 +5,11 @@ import org.bymc.gomoku.uifx.view.common.BorderConfig
 import org.bymc.gomoku.uifx.view.common.FontConfig
 import org.bymc.gomoku.uifx.view.common.HorizontalAlignment
 import org.bymc.gomoku.uifx.view.common.VerticalAlignment
-import org.bymc.gomoku.uifx.view.util.mouse.MouseInteractiveViewDisplayState
-import org.bymc.gomoku.uifx.view.util.mouse.MouseInteractiveEventListener
-import org.bymc.gomoku.uifx.view.util.mouse.MouseInteractiveStateTracker
-import org.bymc.gomoku.uifx.view.util.mouse.MouseInteractiveViewArea
-import org.bymc.gomoku.uifx.view.util.painter.TextPainter
+import org.bymc.gomoku.uifx.view.mouse.MouseInteractiveViewDisplayState
+import org.bymc.gomoku.uifx.view.mouse.MouseInteractiveEventListener
+import org.bymc.gomoku.uifx.view.mouse.MouseInteractiveStateTracker
+import org.bymc.gomoku.uifx.view.mouse.MouseInteractiveViewArea
+import org.bymc.gomoku.uifx.view.painter.TextPainter
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.Insets
@@ -267,7 +267,9 @@ class LabelView(
     /**
      * 滑鼠交互显示状态变更事件。
      */
-    override fun onDisplayStateChanged(original: MouseInteractiveViewDisplayState, current: MouseInteractiveViewDisplayState) {}
+    override fun onDisplayStateChanged(
+        original: MouseInteractiveViewDisplayState, current: MouseInteractiveViewDisplayState
+    ) {}
 
     /**
      * 绘制边框。

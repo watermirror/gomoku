@@ -13,45 +13,45 @@ interface MouseEventHandler {
     /**
      * 滑鼠左键按下。
      */
-    fun onLButtonPressed(position: Point, pressedCount: Int)
+    fun onLButtonPressed(sender: View, position: Point, pressedCount: Int)
 
     /**
      * 滑鼠左键释放。
      */
-    fun onLButtonReleased(position: Point)
+    fun onLButtonReleased(sender: View, position: Point)
 
     /**
      * 滑鼠右键按下。
      */
-    fun onRButtonPressed(position: Point, pressedCount: Int)
+    fun onRButtonPressed(sender: View, position: Point, pressedCount: Int)
 
     /**
      * 滑鼠右键释放。
      */
-    fun onRButtonReleased(position: Point)
+    fun onRButtonReleased(sender: View, position: Point)
 
     /**
      * 滑鼠进入视图。
      */
-    fun onMouseEntered()
+    fun onMouseEntered(sender: View)
 
     /**
      * 滑鼠离开视图。
      */
-    fun onMouseExited()
+    fun onMouseExited(sender: View)
 
     /**
      * 滑鼠在视图上移动。
      */
-    fun onMouseMoved(position: Point)
+    fun onMouseMoved(sender: View, position: Point)
 
     /**
      * 成为捕获视图。
      */
-    fun onCaptureGot()
+    fun onCaptureGot(sender: View)
 
     /**
      * 不再是捕获视图。
      */
-    fun onCaptureLost()
+    fun onCaptureLost(sender: View)
 }

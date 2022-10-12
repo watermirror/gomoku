@@ -1,9 +1,9 @@
 package org.bymc.gomoku.uifx.view.base
 
-import org.bymc.gomoku.uifx.view.util.mouse.MouseInteractiveEventListener
-import org.bymc.gomoku.uifx.view.util.mouse.MouseInteractiveStateTracker
-import org.bymc.gomoku.uifx.view.util.mouse.MouseInteractiveViewArea
-import org.bymc.gomoku.uifx.view.util.mouse.MouseInteractiveViewDisplayState
+import org.bymc.gomoku.uifx.view.mouse.MouseInteractiveEventListener
+import org.bymc.gomoku.uifx.view.mouse.MouseInteractiveStateTracker
+import org.bymc.gomoku.uifx.view.mouse.MouseInteractiveViewArea
+import org.bymc.gomoku.uifx.view.mouse.MouseInteractiveViewDisplayState
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.Rectangle

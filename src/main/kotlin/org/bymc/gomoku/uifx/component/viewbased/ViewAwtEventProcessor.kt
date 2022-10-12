@@ -68,7 +68,7 @@ class ViewAwtEventProcessor(
         handoverCapturedView(hitTest.getHitView())
         if (handoverHoveredView(hitTest.getHitView())) {
             // 如果悬停视图变更了，向新悬停视图发送滑鼠移动通知。
-            hitTest.getHitView()?.onMouseMoved(hitTest.getRelativePosition()!!)
+            hitTest.getHitView()?.onMouseMoved(hitTest.getHitView()!!, hitTest.getRelativePosition()!!)
             // 并重置下压计数。
             resetClickCount()
         }
@@ -79,10 +79,12 @@ class ViewAwtEventProcessor(
         // 通知视图。
         if (hitTest.isNotEmpty()) {
             when (e.button) {
-                MouseEvent.BUTTON1 ->
-                    hitTest.getHitView()!!.onLButtonPressed(hitTest.getRelativePosition()!!, getCurrentClickCount())
-                MouseEvent.BUTTON3 ->
-                    hitTest.getHitView()!!.onRButtonPressed(hitTest.getRelativePosition()!!, getCurrentClickCount())
+                MouseEvent.BUTTON1 -> hitTest.getHitView()!!.onLButtonPressed(
+                    hitTest.getHitView()!!, hitTest.getRelativePosition()!!, getCurrentClickCount()
+                )
+                MouseEvent.BUTTON3 -> hitTest.getHitView()!!.onRButtonPressed(
+                    hitTest.getHitView()!!, hitTest.getRelativePosition()!!, getCurrentClickCount()
+                )
             }
         }
     }
@@ -104,8 +106,8 @@ class ViewAwtEventProcessor(
         // 通知视图。
         if (relativePosition != null) {
             when (e.button) {
-                MouseEvent.BUTTON1 -> capturedView!!.onLButtonReleased(relativePosition)
-                MouseEvent.BUTTON3 -> capturedView!!.onRButtonReleased(relativePosition)
+                MouseEvent.BUTTON1 -> capturedView!!.onLButtonReleased(capturedView!!, relativePosition)
+                MouseEvent.BUTTON3 -> capturedView!!.onRButtonReleased(capturedView!!, relativePosition)
             }
         }
 
@@ -116,7 +118,7 @@ class ViewAwtEventProcessor(
         val hitTest = HitTester(rootView, e.point).test()
         if (handoverHoveredView(hitTest.getHitView())) {
             // 如果悬停视图变更了，向新悬停视图发送滑鼠移动通知。
-            hitTest.getHitView()?.onMouseMoved(hitTest.getRelativePosition()!!)
+            hitTest.getHitView()?.onMouseMoved(hitTest.getHitView()!!, hitTest.getRelativePosition()!!)
         }
     }
 
@@ -172,14 +174,14 @@ class ViewAwtEventProcessor(
         if (capturedView != null) {
             handoverHoveredView(capturedView)
             return capturedView!!.onMouseMoved(
-                PositionCalculator(capturedView!!, rootView, e.point).calculate() ?: return
+                capturedView!!, PositionCalculator(capturedView!!, rootView, e.point).calculate() ?: return
             )
         }
 
         // 命中检测、可能变更悬停视图、通知滑鼠移动事件。
         val hitTest = HitTester(rootView, e.point).test()
         handoverHoveredView(hitTest.getHitView())
-        hitTest.getHitView()?.onMouseMoved(hitTest.getRelativePosition()!!)
+        hitTest.getHitView()?.onMouseMoved(hitTest.getHitView()!!, hitTest.getRelativePosition()!!)
     }
 
     /**
@@ -197,8 +199,8 @@ class ViewAwtEventProcessor(
         this.hoveredView = hoveredView
 
         // 通知事件。
-        originalView?.onMouseExited()
-        hoveredView?.onMouseEntered()
+        originalView?.onMouseExited(originalView)
+        hoveredView?.onMouseEntered(hoveredView)
         return true
     }
 
@@ -213,8 +215,8 @@ class ViewAwtEventProcessor(
 
         // 事件通知。
         if (originalView != capturedView) {
-            originalView?.onCaptureLost()
-            capturedView?.onCaptureGot()
+            originalView?.onCaptureLost(originalView)
+            capturedView?.onCaptureGot(capturedView)
         }
 
         // 返回原捕获视图。

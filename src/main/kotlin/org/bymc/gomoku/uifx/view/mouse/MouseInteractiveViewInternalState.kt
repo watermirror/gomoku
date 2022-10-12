@@ -1,4 +1,4 @@
-package org.bymc.gomoku.uifx.view.util.mouse
+package org.bymc.gomoku.uifx.view.mouse
 
 /**
  * 支持滑鼠交互视图的内部状态。

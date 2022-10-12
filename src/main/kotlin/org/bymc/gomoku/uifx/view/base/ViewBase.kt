@@ -28,7 +28,22 @@ abstract class ViewBase(
     /**
      * 可交互性。
      */
-    private var theInteractive: Boolean = true
+    private var theInteractive: Boolean = true,
+
+    /**
+     * 是否开启阴影。
+     */
+    private var shadowEnabled: Boolean = false,
+
+    /**
+     * 阴影偏移。
+     */
+    private var theShadowOffset: Point = Point(6, 4),
+
+    /**
+     * 阴影视图。
+     */
+    private var shadowView: ViewBase? = null
 
 ) : View, SubView {
 
@@ -89,7 +104,12 @@ abstract class ViewBase(
         val originalArea = theArea
         theArea = area
 
-        // 触发 Resize 事件。
+        // 触发 Moved 事件。
+        if (originalArea.location != area.location) {
+            onMoved(originalArea.location, area.location)
+        }
+
+        // 触发 Resized 事件。
         if (originalArea.size != area.size) {
             onResized(originalArea.size, area.size)
         }
@@ -120,6 +140,12 @@ abstract class ViewBase(
 
         // 更新可见性。
         theShowing = showing
+
+        // 事件通知。
+        when (theShowing) {
+            true -> onVisible()
+            false -> onHidden()
+        }
 
         // 调度渲染。
         scheduleRender()
@@ -176,20 +202,51 @@ abstract class ViewBase(
     /**
      * 加入子视图，重复加入会抛异常。
      */
-    final override fun appendSubView(subView: View) {
+    final override fun addSubView(subView: View) {
 
         require(subView != this)
         require(subView as? SubView != null)
         if (containDescendantView(subView)) {
-            throw RuntimeException("trying to append a duplicated descendant view")
+            throw RuntimeException("trying to add a duplicated descendant view")
         }
 
         subViews.add(subView)
-        (subView as? SubView)?.setParent(this)
+        setParentInternally(subView)
+    }
 
-        if (subView.getShowing()) {
-            scheduleRender(subView.getArea())
+    /**
+     * 在锚点视图之后插入视图。
+     */
+    override fun addSubViewAfter(subView: View, anchor: View) {
+
+        require(subView != this)
+        require(subView as? SubView != null)
+        if (containDescendantView(subView)) {
+            throw RuntimeException("trying to add a duplicated descendant view")
         }
+
+        val realAnchor = (anchor as? ViewBase)?.shadowView ?: anchor
+        addSubViewAfterInternally(subView, realAnchor)
+    }
+
+    /**
+     * 在锚点视图之前插入视图。
+     */
+    override fun addSubViewBefore(subView: View, anchor: View) {
+
+        require(subView != this)
+        require(subView as? SubView != null)
+        if (containDescendantView(subView)) {
+            throw RuntimeException("trying to add a duplicated descendant view")
+        }
+
+        val index = subViews.indexOf(anchor)
+        if (index < 0) {
+            throw RuntimeException("try to add a sub view at a illegal position")
+        }
+
+        subViews.add(index, subView)
+        setParentInternally(subView)
     }
 
     /**
@@ -204,6 +261,7 @@ abstract class ViewBase(
 
         (subView as? SubView)?.setParent(null)
         subViews.removeAt(index)
+        (subView as? SubView)?.onDetached(this)
 
         if (subView.getShowing()) {
             scheduleRender(subView.getArea())
@@ -221,7 +279,7 @@ abstract class ViewBase(
     final override fun scheduleRender(range: Rectangle?) {
 
         // 无父视图或父视图不可见，则不做处理。
-        if (!getShowing() || getParentView() == null || !getParentView()!!.getShowing()) {
+        if (getParentView() == null || !getParentView()!!.getShowing()) {
             return
         }
 
@@ -250,56 +308,86 @@ abstract class ViewBase(
     override fun onRender(g: Graphics, range: Rectangle) {}
 
     /**
+     * 移动事件。
+     */
+    override fun onMoved(originalPosition: Point, newPosition: Point) {
+
+        adjustShadow()
+    }
+
+    /**
      * 视图尺寸变化。
      */
-    override fun onResized(originalSize: Dimension, newSize: Dimension) {}
+    override fun onResized(originalSize: Dimension, newSize: Dimension) {
+
+        adjustShadow()
+    }
+
+    /**
+     * 显示事件。
+     */
+    override fun onVisible() {
+
+        adjustShadow()
+    }
+
+    /**
+     * 隐藏事件。
+     */
+    override fun onHidden() {
+
+        adjustShadow()
+    }
 
     /**
      * 滑鼠左键按下。
      */
-    override fun onLButtonPressed(position: Point, pressedCount: Int) =
-        mouseEventHandlers.forEach { it.onLButtonPressed(position, pressedCount) }
+    override fun onLButtonPressed(sender: View, position: Point, pressedCount: Int) =
+        mouseEventHandlers.forEach { it.onLButtonPressed(sender, position, pressedCount) }
 
     /**
      * 滑鼠左键释放。
      */
-    override fun onLButtonReleased(position: Point) = mouseEventHandlers.forEach { it.onLButtonReleased(position) }
+    override fun onLButtonReleased(sender: View, position: Point) =
+        mouseEventHandlers.forEach { it.onLButtonReleased(sender, position) }
 
     /**
      * 滑鼠右键按下。
      */
-    override fun onRButtonPressed(position: Point, pressedCount: Int) =
-        mouseEventHandlers.forEach { it.onRButtonPressed(position, pressedCount) }
+    override fun onRButtonPressed(sender: View, position: Point, pressedCount: Int) =
+        mouseEventHandlers.forEach { it.onRButtonPressed(sender, position, pressedCount) }
 
     /**
      * 滑鼠右键释放。
      */
-    override fun onRButtonReleased(position: Point) = mouseEventHandlers.forEach { it.onRButtonReleased(position) }
+    override fun onRButtonReleased(sender: View, position: Point) =
+        mouseEventHandlers.forEach { it.onRButtonReleased(sender, position) }
 
     /**
      * 滑鼠进入视图。
      */
-    override fun onMouseEntered() = mouseEventHandlers.forEach { it.onMouseEntered() }
+    override fun onMouseEntered(sender: View) = mouseEventHandlers.forEach { it.onMouseEntered(sender) }
 
     /**
      * 滑鼠离开视图。
      */
-    override fun onMouseExited() = mouseEventHandlers.forEach { it.onMouseExited() }
+    override fun onMouseExited(sender: View) = mouseEventHandlers.forEach { it.onMouseExited(sender) }
 
     /**
      * 滑鼠在视图上移动。
      */
-    override fun onMouseMoved(position: Point) = mouseEventHandlers.forEach { it.onMouseMoved(position) }
+    override fun onMouseMoved(sender: View, position: Point) =
+        mouseEventHandlers.forEach { it.onMouseMoved(sender, position) }
 
     /**
      * 成为捕获视图。
      */
-    override fun onCaptureGot() = mouseEventHandlers.forEach { it.onCaptureGot() }
+    override fun onCaptureGot(sender: View) = mouseEventHandlers.forEach { it.onCaptureGot(sender) }
 
     /**
      * 不再是捕获视图。
      */
-    override fun onCaptureLost() = mouseEventHandlers.forEach { it.onCaptureLost() }
+    override fun onCaptureLost(sender: View, ) = mouseEventHandlers.forEach { it.onCaptureLost(sender) }
 
     /**
      * 设置父视图。
@@ -307,5 +395,136 @@ abstract class ViewBase(
     final override fun setParent(parentView: View?) {
 
         this.parentView = parentView
+    }
+
+    /**
+     * 启用阴影。
+     */
+    final override fun enableShadow() {
+
+        if (shadowEnabled) { return }
+        shadowEnabled = true
+
+        addShadow(parentView)
+        adjustShadow()
+    }
+
+    /**
+     * 禁用阴影。
+     */
+    final override fun disableShadow() {
+
+        if (!shadowEnabled) { return }
+        shadowEnabled = false
+
+        removeShadow(parentView)
+    }
+
+    /**
+     * 设置阴影偏移。
+     */
+    override fun setShadowOffset(offset: Point) {
+
+        if (theShadowOffset == offset) { return }
+        theShadowOffset = offset
+        adjustShadow()
+    }
+
+    /**
+     * 获取阴影视图。
+     */
+    final override fun getShadowView(): View? = shadowView
+
+    /**
+     * 添加到父视图事件。
+     */
+    override fun onAttached(parentView: View) {
+
+        if (!shadowEnabled) { return }
+        addShadow(parentView)
+        adjustShadow()
+    }
+
+    /**
+     * 从父视图移除事件。
+     */
+    override fun onDetached(parentView: View) {
+
+        if (!shadowEnabled) { return }
+        removeShadow(parentView)
+    }
+
+    /**
+     * 在锚点视图后插入视图。
+     */
+    private fun addSubViewAfterInternally(subView: View, anchor: View) {
+
+        val index = subViews.indexOf(anchor)
+        if (index < 0) {
+            throw RuntimeException("try to add a sub view at a illegal position")
+        }
+
+        subViews.add(index + 1, subView)
+        setParentInternally(subView)
+    }
+
+    /**
+     * 设置子视图的父视图。
+     */
+    private fun setParentInternally(subView: View) {
+
+        (subView as? SubView)?.setParent(this)
+        (subView as? SubView)?.onAttached(this)
+
+        if (subView.getShowing()) {
+            scheduleRender(subView.getArea())
+        }
+    }
+
+    /**
+     * 初始化阴影视图。
+     */
+    private fun initializeShadowView() {
+
+        if (!shadowEnabled) { return }
+        if (shadowView != null) { return }
+        shadowView = DefaultShadowView()
+    }
+
+    /**
+     * 添加阴影视图。
+     */
+    private fun addShadow(parentView: View?) {
+
+        if (parentView == null) { return }
+        initializeShadowView()
+        parentView.addSubViewBefore(shadowView!!, this)
+    }
+
+    /**
+     * 移除阴影视图。
+     */
+    private fun removeShadow(parentView: View?) {
+
+        if (parentView == null) { return }
+        if (shadowView == null) { return }
+        parentView.removeSubView(shadowView!!)
+    }
+
+    /**
+     * 调整阴影视图位置或显示状态。。
+     */
+    private fun adjustShadow() {
+
+        if (!shadowEnabled) { return }
+
+        if (!theShowing) {
+            return shadowView?.setShowing(false) ?: Unit
+        }
+
+        shadowView?.setShowing(true)
+        shadowView?.setArea(
+            Rectangle(getArea().x + theShadowOffset.x, getArea().y + theShadowOffset.y, getArea().width, getArea().height)
+        )
     }
 }

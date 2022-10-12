@@ -1,9 +1,6 @@
 package org.bymc.gomoku.uifx.view.base
 
-import java.awt.Color
-import java.awt.Dimension
-import java.awt.Graphics
-import java.awt.Rectangle
+import java.awt.*
 
 /**
  * 视图接口。
@@ -66,7 +63,17 @@ interface View : MouseEventHandler {
     /**
      * 加入子视图，重复加入会抛异常。
      */
-    fun appendSubView(subView: View)
+    fun addSubView(subView: View)
+
+    /**
+     * 在锚点视图之后插入视图。
+     */
+    fun addSubViewAfter(subView: View, anchor: View)
+
+    /**
+     * 在锚点视图之前插入视图。
+     */
+    fun addSubViewBefore(subView: View, anchor: View)
 
     /**
      * 移除子视图，不存在会抛异常。
@@ -89,7 +96,22 @@ interface View : MouseEventHandler {
     fun onRender(g: Graphics, range: Rectangle)
 
     /**
+     * 移动事件。
+     */
+    fun onMoved(originalPosition: Point, newPosition: Point)
+
+    /**
      * 视图尺寸变化。
      */
     fun onResized(originalSize: Dimension, newSize: Dimension)
+
+    /**
+     * 显示事件。
+     */
+    fun onVisible()
+
+    /**
+     * 隐藏事件。
+     */
+    fun onHidden()
 }
