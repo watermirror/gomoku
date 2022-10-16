@@ -41,7 +41,12 @@ class TextPainter(
     /**
      * 字体配置。
      */
-    private val fontConfig: FontConfig = FontConfig()
+    private val fontConfig: FontConfig = FontConfig(),
+
+    /**
+     * 额外偏移。
+     */
+    private val offset: Point = Point()
 
 ) {
 
@@ -66,12 +71,12 @@ class TextPainter(
                 HorizontalAlignment.LEFT -> 0.0
                 HorizontalAlignment.CENTER -> (area.width - bounds.width) / 2
                 HorizontalAlignment.RIGHT -> area.width - bounds.width
-            }).toInt(),
+            }).toInt() + offset.x,
             (area.y - bounds.y + when (verticalAlignment) {
                 VerticalAlignment.TOP -> 0.0
                 VerticalAlignment.CENTER -> (area.height - bounds.height) / 2
                 VerticalAlignment.BOTTOM -> area.height - bounds.height
-            }).toInt()
+            }).toInt() + offset.y
         )
 
         // 恢复原色、字体。

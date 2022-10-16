@@ -6,6 +6,7 @@ import org.bymc.gomoku.uifx.view.mouse.MouseInteractiveViewDisplayState
 import org.bymc.gomoku.uifx.view.painter.TextPainter
 import java.awt.Graphics
 import java.awt.Insets
+import java.awt.Point
 import java.awt.Rectangle
 
 /**
@@ -34,7 +35,12 @@ abstract class TextButtonViewBase(
     /**
      * 文本内嵌尺寸。
      */
-    private var insets: Insets = Insets(4, 4, 4, 4)
+    private var insets: Insets = Insets(4, 4, 4, 4),
+
+    /**
+     * 下压后的文本偏移。
+     */
+    private var pressedOffset: Point = Point(2, 1)
 
 ) : ButtonViewBase(area, showing) {
 
@@ -77,6 +83,20 @@ abstract class TextButtonViewBase(
     }
 
     /**
+     * 获取下压文本偏移。
+     */
+    fun getPressedOffset(): Point = pressedOffset
+
+    /**
+     * 设置下压文本偏移。
+     */
+    fun setPressedOffset(offset: Point) {
+
+        this.pressedOffset = offset
+        scheduleRender()
+    }
+
+    /**
      * 根据显示状态进行绘制。
      */
     override fun renderForState(g: Graphics, state: MouseInteractiveViewDisplayState) {
@@ -88,6 +108,10 @@ abstract class TextButtonViewBase(
                 MouseInteractiveViewDisplayState.HOVERED -> buttonTextConfig.getHoveredConfig()
                 MouseInteractiveViewDisplayState.LEFT_PRESSED -> buttonTextConfig.getPressedConfig()
                 else -> buttonTextConfig.getNormalConfig()
+            },
+            when (state) {
+                MouseInteractiveViewDisplayState.LEFT_PRESSED -> pressedOffset
+                else -> Point()
             }
         )
     }
@@ -104,7 +128,7 @@ abstract class TextButtonViewBase(
     /**
      * 绘制文本。
      */
-    private fun paintText(g: Graphics, config: TextConfig) {
+    private fun paintText(g: Graphics, config: TextConfig, offset: Point = Point()) {
 
         // 计算内嵌后的绘制区域。
         val area = Rectangle(
@@ -114,7 +138,8 @@ abstract class TextButtonViewBase(
 
         // 渲染文本。
         TextPainter(
-            config.text, config.color, area, config.horizontalAlignment, config.verticalAlignment, config.fontConfig
+            config.text, config.color, area, config.horizontalAlignment, config.verticalAlignment, config.fontConfig,
+            offset
         ).paint(g)
     }
 }
