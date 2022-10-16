@@ -33,10 +33,19 @@ class WindowInitializer(
         window.layout = null
         // 需要先设置 visible 后 configArea() 才能有效。
         window.isVisible = true
+        configTitle()
         configCloseable()
         configResizable()
         configArea()
         configVisible()
+    }
+
+    /**
+     * 配置窗口标题。
+     */
+    private fun configTitle() {
+
+        window.title = config.title
     }
 
     /**

@@ -12,6 +12,11 @@ import java.awt.Point
 data class WindowInitialConfig(
 
     /**
+     * 窗口标题。
+     */
+    val title: String = "",
+
+    /**
      * 是否可关闭。
      */
     val closeable: Boolean = true,

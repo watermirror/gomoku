@@ -1,8 +1,8 @@
 package org.bymc.gomoku.model
 
+import org.bymc.gomoku.ui.view.GameTestingWindow
 import org.bymc.gomoku.uifx.ViewTestingWindow
 import org.bymc.gomoku.uifx.util.FrameworksInitializer
-import java.awt.Toolkit
 
 /**
  * 主程序。
@@ -13,5 +13,8 @@ fun main() {
     FrameworksInitializer.initialize()
 
     // 创建视图框架集成测试窗口。
-    ViewTestingWindow()
+    // ViewTestingWindow()
+
+    // 创建游戏视图测试窗口。
+    GameTestingWindow()
 }
