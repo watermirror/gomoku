@@ -4,20 +4,20 @@ import org.bymc.gomoku.model.common.param.Location2D
 import org.bymc.gomoku.model.common.param.Size2D
 
 /**
- * 棋盘视图接口。
+ * 棋枰视图模型接口。
  *
  * @author: zheng.chez
  * @since: 2022/09/22
  */
-interface BoardView {
+interface BoardViewModel {
 
     /**
-     * 获取棋盘尺寸。
+     * 获取棋枰尺寸。
      */
     fun getSize(): Size2D
 
     /**
-     * 获取单元格，location 坐标始于 (0, 0)。若 location 超出棋盘范围，将导致异常。
+     * 获取单元格，location 坐标始于 (0, 0)。若 location 超出棋枰范围，将导致异常。
      */
     fun getCell(location: Location2D): Cell
 

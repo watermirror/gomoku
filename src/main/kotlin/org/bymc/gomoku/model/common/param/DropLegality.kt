@@ -39,7 +39,7 @@ enum class DropLegality {
     FORBIDDEN_BY_OLNH_RULE,
 
     /**
-     * 落子在棋盘之外。
+     * 落子在棋枰之外。
      */
     OUT_OF_BOARD
 }

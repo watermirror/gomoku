@@ -13,7 +13,7 @@ internal class FfnhVerifierTest {
     @Test
     fun verify() {
 
-        val boardView = TestBoardView(
+        val boardView = TestBoardViewModel(
             Size2D(15, 15),
             """
                 . . . . . . . o . . . . . . .

@@ -1,20 +1,17 @@
-package org.bymc.gomoku.model
+package org.bymc.gomoku
 
-import org.bymc.gomoku.ui.view.GameTestingWindow
-import org.bymc.gomoku.uifx.ViewTestingWindow
-import org.bymc.gomoku.uifx.util.FrameworksInitializer
+import org.bymc.gomoku.ui.test.BoardTestingWindow
+import org.bymc.gomoku.ui.window.MainWindow
+import org.bymc.gomoku.uifx.util.FrameworksOptimizer
 
 /**
  * 主程序。
  */
 fun main() {
 
-    // 初始化 UI 框架。
-    FrameworksInitializer.initialize()
+    // 优化 UI 框架。
+    FrameworksOptimizer.optimize()
 
-    // 创建视图框架集成测试窗口。
-    // ViewTestingWindow()
-
-    // 创建游戏视图测试窗口。
-    GameTestingWindow()
+    // 创建游戏主窗口。
+    MainWindow()
 }

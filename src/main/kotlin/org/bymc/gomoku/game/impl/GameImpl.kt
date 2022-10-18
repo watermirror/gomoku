@@ -2,10 +2,7 @@ package org.bymc.gomoku.game.impl
 
 import org.bymc.gomoku.game.abstraction.Game
 import org.bymc.gomoku.game.common.GameSituation
-import org.bymc.gomoku.model.abstraction.Board
-import org.bymc.gomoku.model.abstraction.BoardView
-import org.bymc.gomoku.model.abstraction.History
-import org.bymc.gomoku.model.abstraction.Rule
+import org.bymc.gomoku.model.abstraction.*
 import org.bymc.gomoku.model.common.param.*
 import java.util.Date
 
@@ -18,7 +15,7 @@ import java.util.Date
 class GameImpl(
 
     /**
-     * 棋盘接口。
+     * 棋枰接口。
      */
     private val board: Board,
 
@@ -67,9 +64,14 @@ class GameImpl(
     override fun getGameSituation(): GameSituation = situation
 
     /**
-     * 获取棋盘视图。
+     * 获取棋枰视图。
      */
-    override fun getBoardView(): BoardView = board
+    override fun getBoardViewModel(): BoardViewModel = board
+
+    /**
+     * 获取棋局历史视图模型。
+     */
+    override fun getHistoryViewModel(): HistoryViewModel = history
 
     /**
      * 落子。返回 LEGAL 表示落子成功，否则不合法。请保障在棋局进行的状态下调用该方法，若 getGameSituation().state 不为 PLAYING，该方法
@@ -114,7 +116,7 @@ class GameImpl(
             throw RuntimeException("fails to retract caused by history.retract returning empty")
         }
 
-        // 从棋盘上抹去要撤销的棋子。
+        // 从棋枰上抹去要撤销的棋子。
         retractedDrops.forEach { board.cleanCell(it.getDrop().location) }
 
         // 更新游戏情况。

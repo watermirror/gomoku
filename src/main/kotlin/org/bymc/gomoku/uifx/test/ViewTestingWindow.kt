@@ -1,4 +1,4 @@
-package org.bymc.gomoku.uifx
+package org.bymc.gomoku.uifx.test
 
 import org.bymc.gomoku.uifx.view.LabelView
 import org.bymc.gomoku.uifx.view.LabelViewEventListener

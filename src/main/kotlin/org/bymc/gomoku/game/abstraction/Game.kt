@@ -1,7 +1,8 @@
 package org.bymc.gomoku.game.abstraction
 
 import org.bymc.gomoku.game.common.GameSituation
-import org.bymc.gomoku.model.abstraction.BoardView
+import org.bymc.gomoku.model.abstraction.BoardViewModel
+import org.bymc.gomoku.model.abstraction.HistoryViewModel
 import org.bymc.gomoku.model.common.param.DropLegality
 import org.bymc.gomoku.model.common.param.Location2D
 
@@ -19,9 +20,14 @@ interface Game {
     fun getGameSituation(): GameSituation
 
     /**
-     * 获取棋盘视图。
+     * 获取棋枰视图模型。
      */
-    fun getBoardView(): BoardView
+    fun getBoardViewModel(): BoardViewModel
+
+    /**
+     * 获取棋局历史视图模型。
+     */
+    fun getHistoryViewModel(): HistoryViewModel
 
     /**
      * 落子。返回 LEGAL 表示落子成功，否则不合法。请保障在棋局进行的状态下调用该方法，若 getGameSituation().state 不为 PLAYING，该方法

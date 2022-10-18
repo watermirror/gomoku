@@ -1,6 +1,6 @@
 package org.bymc.gomoku.model.common.util
 
-import org.bymc.gomoku.model.abstraction.BoardView
+import org.bymc.gomoku.model.abstraction.BoardViewModel
 import org.bymc.gomoku.model.abstraction.Cell
 import org.bymc.gomoku.model.common.param.Drop
 import org.bymc.gomoku.model.common.param.Polar
@@ -15,9 +15,9 @@ import org.bymc.gomoku.model.common.param.Stone
 class OlnhVerifier(
 
     /**
-     * 棋盘视图接口。
+     * 棋枰视图接口。
      */
-    private val boardView: BoardView,
+    private val boardViewModel: BoardViewModel,
 
     /**
      * 待判定的落子。
@@ -27,7 +27,7 @@ class OlnhVerifier(
 ) {
 
     // 初始化校验，若落子位置有棋子则抛出异常。
-    init { require(!boardView.getCell(drop.location).isOccupied()) }
+    init { require(!boardViewModel.getCell(drop.location).isOccupied()) }
 
     /**
      * 判定是否长连禁手。
@@ -41,7 +41,7 @@ class OlnhVerifier(
 
         // 统计四个归一化极轴的连棋数量。
         val linkedCountList =
-            Polar.getNormalizedPolars().map { countLinkedStones(boardView.getCell(drop.location), it) }
+            Polar.getNormalizedPolars().map { countLinkedStones(boardViewModel.getCell(drop.location), it) }
 
         // 如果存在五连珠的情况，则不禁手。
         linkedCountList.find { it == 4 }?.also { return false }

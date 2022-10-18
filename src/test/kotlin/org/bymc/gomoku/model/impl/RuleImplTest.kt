@@ -1,7 +1,7 @@
 package org.bymc.gomoku.model.impl
 
 import org.bymc.gomoku.model.common.param.*
-import org.bymc.gomoku.model.common.util.TestBoardView
+import org.bymc.gomoku.model.common.util.TestBoardViewModel
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
@@ -11,7 +11,7 @@ internal class RuleImplTest {
     @Test
     fun checkDropLegality() {
 
-        val boardView = TestBoardView(
+        val boardView = TestBoardViewModel(
             Size2D(15, 15),
             """
                 . . . . . . . . . . . . . . .
@@ -90,7 +90,7 @@ internal class RuleImplTest {
     @Test
     fun judgeGameState_case_1() {
 
-        val boardView = TestBoardView(
+        val boardView = TestBoardViewModel(
             Size2D(15, 15),
             """
                 . . . . . . . . . . . . . . .
@@ -120,7 +120,7 @@ internal class RuleImplTest {
     @Test
     fun judgeGameState_case_2() {
 
-        val boardView = TestBoardView(
+        val boardView = TestBoardViewModel(
             Size2D(15, 15),
             """
                 . . . . . . . . . . . . . . .
@@ -147,7 +147,7 @@ internal class RuleImplTest {
     @Test
     fun judgeGameState_case_3() {
 
-        val boardView = TestBoardView(
+        val boardView = TestBoardViewModel(
             Size2D(15, 15),
             """
                 . . . . . . . . . . . . . . .
@@ -174,7 +174,7 @@ internal class RuleImplTest {
     @Test
     fun judgeGameState_case_4() {
 
-        val boardView = TestBoardView(
+        val boardView = TestBoardViewModel(
             Size2D(15, 15),
             """
                 x x x o o o x x x o o o x x x

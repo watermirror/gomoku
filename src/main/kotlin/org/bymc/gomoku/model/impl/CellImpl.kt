@@ -1,6 +1,6 @@
 package org.bymc.gomoku.model.impl
 
-import org.bymc.gomoku.model.abstraction.BoardView
+import org.bymc.gomoku.model.abstraction.BoardViewModel
 import org.bymc.gomoku.model.abstraction.Cell
 import org.bymc.gomoku.model.common.param.Direction
 import org.bymc.gomoku.model.common.param.Location2D
@@ -15,9 +15,9 @@ import org.bymc.gomoku.model.common.param.Stone
 data class CellImpl(
 
     /**
-     * 单元格所属的棋盘视图。
+     * 单元格所属的棋枰视图。
      */
-    private val boardView: BoardView,
+    private val boardViewModel: BoardViewModel,
 
     /**
      * 单元的坐标，始于 (0, 0)。
@@ -57,11 +57,11 @@ data class CellImpl(
         )
 
         // 检测越界。
-        if (targetLocation.x !in 0 until boardView.getSize().width) return null
-        if (targetLocation.y !in 0 until boardView.getSize().height) return null
+        if (targetLocation.x !in 0 until boardViewModel.getSize().width) return null
+        if (targetLocation.y !in 0 until boardViewModel.getSize().height) return null
 
         // 查询目标单元格并返回。
-        return boardView.getCell(targetLocation)
+        return boardViewModel.getCell(targetLocation)
     }
 
     /**

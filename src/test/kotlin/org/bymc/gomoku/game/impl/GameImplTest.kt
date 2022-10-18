@@ -38,7 +38,7 @@ internal class GameImplTest {
         val rule: Rule = mock()
         whenever(rule.judgeGameState(any())).thenReturn(GameState.PLAYING)
         val game = GameImpl(board, history, rule)
-        val sample = game.getBoardView()
+        val sample = game.getBoardViewModel()
 
         assertEquals(board, sample)
     }

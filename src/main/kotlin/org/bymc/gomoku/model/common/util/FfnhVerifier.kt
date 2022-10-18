@@ -1,6 +1,6 @@
 package org.bymc.gomoku.model.common.util
 
-import org.bymc.gomoku.model.abstraction.BoardView
+import org.bymc.gomoku.model.abstraction.BoardViewModel
 import org.bymc.gomoku.model.abstraction.Cell
 import org.bymc.gomoku.model.common.param.Drop
 import org.bymc.gomoku.model.common.param.Polar
@@ -15,9 +15,9 @@ import org.bymc.gomoku.model.common.param.Stone
 class FfnhVerifier(
 
     /**
-     * 棋盘视图接口。
+     * 棋枰视图接口。
      */
-    private val boardView: BoardView,
+    private val boardViewModel: BoardViewModel,
 
     /**
      * 待判定的落子。
@@ -27,7 +27,7 @@ class FfnhVerifier(
 ) {
 
     // 初始化校验，若落子位置有棋子则抛出异常。
-    init { require(!boardView.getCell(drop.location).isOccupied()) }
+    init { require(!boardViewModel.getCell(drop.location).isOccupied()) }
 
     /**
      * 判定是否四四禁手。
@@ -40,12 +40,12 @@ class FfnhVerifier(
         }
 
         // 如果满足五连珠，则不判定三三禁手。
-        if (GomokuVerifier(boardView, drop.location).verifyBeforeDrop(drop.stone)) {
+        if (GomokuVerifier(boardViewModel, drop.location).verifyBeforeDrop(drop.stone)) {
             return false
         }
 
         // 获取测试单元格，统计活四和冲四的数量。大于 1 则满足四四禁手判定。
-        val testedCell = boardView.getCell(drop.location)
+        val testedCell = boardViewModel.getCell(drop.location)
         return countAliveTetrad(testedCell) + countHalfAliveTetrad(testedCell) > 1
     }
 

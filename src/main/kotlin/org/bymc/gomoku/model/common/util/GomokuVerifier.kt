@@ -1,6 +1,6 @@
 package org.bymc.gomoku.model.common.util
 
-import org.bymc.gomoku.model.abstraction.BoardView
+import org.bymc.gomoku.model.abstraction.BoardViewModel
 import org.bymc.gomoku.model.abstraction.Cell
 import org.bymc.gomoku.model.common.param.Location2D
 import org.bymc.gomoku.model.common.param.Polar
@@ -15,9 +15,9 @@ import org.bymc.gomoku.model.common.param.Stone
 class GomokuVerifier(
 
     /**
-     * 棋盘视图接口。
+     * 棋枰视图接口。
      */
-    private val boardView: BoardView,
+    private val boardViewModel: BoardViewModel,
 
     /**
      * 最后落子坐标或即将落子坐标。
@@ -32,7 +32,7 @@ class GomokuVerifier(
     fun verify(): Boolean {
 
         // 获取单元格、断言
-        val cell = boardView.getCell(dropLocation)
+        val cell = boardViewModel.getCell(dropLocation)
         require(cell.getStone() != null)
 
         // 统计四个归一化极轴上的连棋数量。
@@ -48,7 +48,7 @@ class GomokuVerifier(
     fun verifyBeforeDrop(dropStone: Stone): Boolean {
 
         // 获取单元格、断言
-        val cell = boardView.getCell(dropLocation)
+        val cell = boardViewModel.getCell(dropLocation)
         require(cell.getStone() == null)
 
         // 统计四个归一化极轴上的连棋数量。

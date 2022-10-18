@@ -5,36 +5,36 @@ import java.awt.Frame
 import java.awt.Rectangle
 
 /**
- * UI 框架初始化器。
+ * UI 框架初优化器。
  *
  * @author: zheng.chez
  * @since: 2022/10/08
  */
-object FrameworksInitializer {
+object FrameworksOptimizer {
 
     /**
-     * 初始化标记。
+     * 优化标记。
      */
-    private var initialized = false
+    private var optimized = false
 
     /**
-     * 初始化 UI 框架。
+     * 优化 UI 框架。
      */
-    fun initialize() {
+    fun optimize() {
 
-        // 避免重复初始化。
-        if (initialized) {
+        // 避免重复优化。
+        if (optimized) {
             return
         }
 
-        // 各项初始化调用。
-        initializeFont()
+        // 各项优化调用。
+        optimizeFont()
     }
 
     /**
-     * 初始化字体。
+     * 优化字体加载。
      */
-    private fun initializeFont() {
+    private fun optimizeFont() {
 
         // 创建一个临时窗口预渲染字体。
         val frame = Frame()

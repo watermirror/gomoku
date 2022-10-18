@@ -8,7 +8,7 @@ import org.bymc.gomoku.model.common.param.Size2D
 import org.bymc.gomoku.model.common.param.Stone
 
 /**
- * 棋盘接口实现类。
+ * 棋枰接口实现类。
  *
  * @author: zheng.chez
  * @since: 2022/09/23
@@ -16,19 +16,19 @@ import org.bymc.gomoku.model.common.param.Stone
 class BoardImpl(
 
     /**
-     * 棋盘尺寸。
+     * 棋枰尺寸。
      */
     private val boardSize: Size2D,
 
     /**
-     * 初始化棋子，若棋子坐标超出棋盘范围，将抛出异常。
+     * 初始化棋子，若棋子坐标超出棋枰范围，将抛出异常。
      */
     initialDrops: Set<Drop>
 
 ) : Board {
 
     /**
-     * 棋子映射。该映射代表存在与棋盘特定坐标单元格的棋子。
+     * 棋子映射。该映射代表存在与棋枰特定坐标单元格的棋子。
      */
     private val stones = HashMap<Location2D, Stone>()
 
@@ -72,12 +72,12 @@ class BoardImpl(
     }
 
     /**
-     * 获取棋盘尺寸。
+     * 获取棋枰尺寸。
      */
     override fun getSize(): Size2D = boardSize
 
     /**
-     * 获取单元格，location 坐标始于 (0, 0)。若 location 超出棋盘范围，将导致异常。
+     * 获取单元格，location 坐标始于 (0, 0)。若 location 超出棋枰范围，将导致异常。
      */
     override fun getCell(location: Location2D): Cell {
 
