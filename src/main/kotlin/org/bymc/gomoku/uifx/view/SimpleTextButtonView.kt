@@ -62,7 +62,7 @@ class SimpleTextButtonView(
             BorderConfig(3, Color.BLACK)
         ),
         disabledBg = BgConfig(
-            Color.LIGHT_GRAY,
+            Color(224, 224, 224),
             BorderConfig(3, Color.GRAY)
         ),
         normalTextColor = Color.BLACK,
