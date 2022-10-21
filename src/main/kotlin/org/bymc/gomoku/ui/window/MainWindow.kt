@@ -4,6 +4,7 @@ import org.bymc.gomoku.ui.animation.TitleAnimation
 import org.bymc.gomoku.ui.view.BoardIntegrationView
 import org.bymc.gomoku.ui.view.CoveringLayerView
 import org.bymc.gomoku.ui.view.TitlePanelView
+import org.bymc.gomoku.uifx.animation.easefunc.EaseFunctions
 import org.bymc.gomoku.uifx.view.SimpleTextButtonView
 import org.bymc.gomoku.uifx.view.base.ButtonViewBase
 import org.bymc.gomoku.uifx.view.base.ButtonViewEventListener
@@ -120,7 +121,7 @@ class MainWindow(
      */
     private val titleAnimation: TitleAnimation = TitleAnimation(
         uiConfig, boardView, titlePanelView, selfStudyButtonView, challengeAiButtonView, dualButtonView,
-        coveringLayerView
+        coveringLayerView, EaseFunctions.easeInOutBack()
     )
 
     /**

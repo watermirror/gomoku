@@ -17,10 +17,10 @@ class EaseInOut : EaseFunction {
 
         val r = x / 0.5
         return when {
-            r < 1.0 -> 0.5 * r * r * r * r * r
+            r < 1.0 -> 0.5 * r * r * r
             else -> {
                 val s = r - 2.0
-                0.5 * (s * s * s * s * s + 2)
+                0.5 * (s * s * s + 2)
             }
         }
     }

@@ -8,6 +8,7 @@ import org.bymc.gomoku.uifx.animation.animator.AnimationEventListener
 import org.bymc.gomoku.uifx.animation.animator.Animator
 import org.bymc.gomoku.uifx.animation.animator.Animators
 import org.bymc.gomoku.uifx.animation.animator.PlayingState
+import org.bymc.gomoku.uifx.animation.easefunc.EaseFunction
 import org.bymc.gomoku.uifx.animation.easefunc.EaseFunctions
 import org.bymc.gomoku.uifx.view.SimpleTextButtonView
 import java.awt.Rectangle
@@ -54,7 +55,12 @@ class TitleAnimation(
     /**
      * 遮盖视图。
      */
-    private val coveringLayerView: CoveringLayerView
+    private val coveringLayerView: CoveringLayerView,
+
+    /**
+     * 缓动函数。
+     */
+    easeFunction: EaseFunction = EaseFunctions.easeInOutBack(),
 
 ) : AnimationEventListener {
 
@@ -68,7 +74,7 @@ class TitleAnimation(
      */
     private val boardViewAnimator: Animator = Animators.viewAreaAnimator(
         uiConfig.getTitleBoardAnimationDuration(),
-        EaseFunctions.easeInOutBack(),
+        easeFunction,
         boardView,
         Rectangle(
             (uiConfig.getMainWindowClientSize().width - uiConfig.getBoardSize().width) / 2,
@@ -89,7 +95,7 @@ class TitleAnimation(
      */
     private val titlePanelViewAnimator: Animator = Animators.viewAreaAnimator(
         uiConfig.getTitlePanelAnimationDuration(),
-        EaseFunctions.easeInOutBack(),
+        easeFunction,
         titlePanelView,
         Rectangle(
             (uiConfig.getMainWindowClientSize().width - uiConfig.getTitlePanelSize().width) / 2,
@@ -111,7 +117,7 @@ class TitleAnimation(
      */
     private val selfStudyButtonViewAnimator: Animator = Animators.viewAreaAnimator(
         uiConfig.getTitleButtonAnimationDuration(),
-        EaseFunctions.easeInOutBack(),
+        easeFunction,
         selfStudyButtonView,
         Rectangle(
             (uiConfig.getMainWindowClientSize().width - uiConfig.getSelfStudyButtonSize().width) / 2,
@@ -134,7 +140,7 @@ class TitleAnimation(
      */
     private val challengeAiButtonViewAnimator: Animator = Animators.viewAreaAnimator(
         uiConfig.getTitleButtonAnimationDuration(),
-        EaseFunctions.easeInOutBack(),
+        easeFunction,
         challengeAiButtonView,
         Rectangle(
             (uiConfig.getMainWindowClientSize().width - uiConfig.getChallengeAiButtonSize().width) / 2,
@@ -157,7 +163,7 @@ class TitleAnimation(
      */
     private val dualButtonViewAnimator: Animator = Animators.viewAreaAnimator(
         uiConfig.getTitleButtonAnimationDuration(),
-        EaseFunctions.easeInOutBack(),
+        easeFunction,
         dualButtonView,
         Rectangle(
             (uiConfig.getMainWindowClientSize().width - uiConfig.getDualButtonSize().width) / 2,

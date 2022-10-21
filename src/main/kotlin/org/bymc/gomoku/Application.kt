@@ -1,6 +1,5 @@
 package org.bymc.gomoku
 
-import org.bymc.gomoku.ui.test.BoardTestingWindow
 import org.bymc.gomoku.ui.window.MainWindow
 import org.bymc.gomoku.uifx.util.FrameworksOptimizer
 
