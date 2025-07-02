@@ -40,14 +40,21 @@ class OlnhVerifier(
         }
 
         // 统计四个归一化极轴的连棋数量。
-        val linkedCountList =
-            Polar.getNormalizedPolars().map { countLinkedStones(boardViewModel.getCell(drop.location), it) }
+        val linkedCountList = Polar.getNormalizedPolars().map {
+            countLinkedStones(boardViewModel.getCell(drop.location), it)
+        }
 
-        // 如果存在五连珠的情况，则不禁手。
-        linkedCountList.find { it == 4 }?.also { return false }
+        // 若存在长连（大于五连珠）则为禁手。
+        if (linkedCountList.any { it > 4 }) {
+            return true
+        }
 
-        // 如果存在五连珠以上的连珠则禁手。
-        return linkedCountList.find { it > 4 } != null
+        // 若仅存在五连珠则不禁手。
+        if (linkedCountList.any { it == 4 }) {
+            return false
+        }
+
+        return false
     }
 
     /**
