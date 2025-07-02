@@ -32,7 +32,7 @@ class ViewAwtEventProcessor(
     /**
      * 下压点击数偏移值。
      */
-    private var clickCountOffSet: Int = 0
+    private var clickCountOffset: Int = 0
 
     /**
      * 下压点击数系统值。
@@ -244,7 +244,7 @@ class ViewAwtEventProcessor(
      */
     private fun resetClickCount() {
 
-        clickCountOffSet = 0
+        clickCountOffset = 0
         systemClickCount = 0
         countedMouseButton = 0
     }
@@ -254,7 +254,7 @@ class ViewAwtEventProcessor(
      */
     private fun beginCount(pressedButton: Int, systemCount: Int) {
 
-        clickCountOffSet = 1 - systemCount
+        clickCountOffset = 1 - systemCount
         systemClickCount = systemCount
         countedMouseButton = pressedButton
     }
@@ -262,5 +262,5 @@ class ViewAwtEventProcessor(
     /**
      * 获取当前下压计数。
      */
-    private fun getCurrentClickCount(): Int = systemClickCount + clickCountOffSet
+    private fun getCurrentClickCount(): Int = systemClickCount + clickCountOffset
 }
