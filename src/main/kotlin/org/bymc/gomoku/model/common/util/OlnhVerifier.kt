@@ -49,11 +49,6 @@ class OlnhVerifier(
             return true
         }
 
-        // 若仅存在五连珠则不禁手。
-        if (linkedCountList.any { it == 4 }) {
-            return false
-        }
-
         return false
     }
 
