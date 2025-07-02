@@ -40,7 +40,7 @@ internal class BoardImplTest {
     }
 
     @Test
-    fun getSize_exceptional() {
+    fun getCell_exceptional() {
 
         val board = BoardImpl(Size2D(15, 15), setOf(Drop(Location2D(0, 0), Stone.WHITE)))
         assertThrows(RuntimeException::class.java) {
