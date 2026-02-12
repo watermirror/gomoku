@@ -110,11 +110,16 @@ class MainWindow(
     /**
      * 标题动画测试按钮。
      */
-    private val titleAnimationTestButton: SimpleTextButtonView = SimpleTextButtonView(
-        text = "Test Title Animation",
-        area = Rectangle(10, 10, 200, 30),
-        showing = true
-    )
+    private val titleAnimationTestButton: SimpleTextButtonView? =
+        if (System.getenv("GOMOKU_SHOW_TEST_BUTTON") == "true") {
+            SimpleTextButtonView(
+                text = "Test Title Animation",
+                area = Rectangle(10, 10, 200, 30),
+                showing = true
+            )
+        } else {
+            null
+        }
 
     /**
      * 标题动画。
@@ -144,9 +149,11 @@ class MainWindow(
         getRootView().addSubView(coveringLayerView)
 
         // 测试按钮。
-        titleAnimationTestButton.enableShadow()
-        titleAnimationTestButton.addEventListener(this)
-        getRootView().addSubView(titleAnimationTestButton)
+        titleAnimationTestButton?.let {
+            it.enableShadow()
+            it.addEventListener(this)
+            getRootView().addSubView(it)
+        }
     }
 
     /**
