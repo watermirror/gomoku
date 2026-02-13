@@ -85,3 +85,10 @@ Follow Conventional Commits style:
 
 - **Never push without explicit request**: Do not run `git push` unless the user explicitly asks to push.
 - **Never force push without explicit request**: When the user asks to push, use normal push only. Never use `--force` or `-f` unless the user explicitly requests a force push.
+
+## Active Technologies
+- Kotlin 1.6 / JVM + JavaFX (OpenJFX), AWT/Swing (for animation timers and Canvas) (001-self-study-mode)
+- N/A (in-memory game state only) (001-self-study-mode)
+
+## Recent Changes
+- 001-self-study-mode: Added Kotlin 1.6 / JVM + JavaFX (OpenJFX), AWT/Swing (for animation timers and Canvas)
