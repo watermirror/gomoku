@@ -198,7 +198,7 @@ class RootViewCanvas(
             return repaint()
         }
 
-        if (range.width == 0 || range.height == 0) {
+        if (range.width <= 0 || range.height <= 0) {
             return
         }
 

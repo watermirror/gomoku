@@ -289,7 +289,7 @@ abstract class ViewBase(
         }
 
         // 求交集重绘制。
-        val translated = Rectangle(range).also { it.location = Point(getArea().location) }
+        val translated = Rectangle(range).also { it.translate(getArea().x, getArea().y) }
         val targetRange = Rectangle()
         Rectangle.intersect(getArea(), translated, targetRange)
         Rectangle.intersect(
@@ -297,7 +297,7 @@ abstract class ViewBase(
             Rectangle(0, 0, getParentView()!!.getArea().width, getParentView()!!.getArea().height),
             targetRange
         )
-        if (targetRange.width != 0 && targetRange.height != 0) {
+        if (targetRange.width > 0 && targetRange.height > 0) {
             getParentView()!!.scheduleRender(targetRange)
         }
     }
