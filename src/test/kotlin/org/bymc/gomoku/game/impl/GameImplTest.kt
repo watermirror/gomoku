@@ -209,4 +209,151 @@ internal class GameImplTest {
             game.retract()
         }
     }
+
+    @Test
+    fun retractLast_duringPlaying() {
+
+        val board: Board = mock()
+        val record: DropRecord = mock()
+        whenever(record.getDrop()).thenReturn(Drop(Location2D(7, 7), Stone.BLACK))
+        val history: History = mock()
+        whenever(history.retractLast()).thenReturn(record)
+        whenever(history.getRecordCount()).thenReturn(1)
+        whenever(history.getLastRecord()).thenReturn(record)
+        val rule: Rule = mock()
+        whenever(rule.judgeGameState(any())).thenReturn(GameState.PLAYING)
+        val game = GameImpl(board, history, rule)
+
+        game.retractLast()
+
+        verify(board).cleanCell(eq(Location2D(7, 7)))
+        assertEquals(Stone.BLACK, game.getGameSituation().roundActor)
+        assertEquals(GameState.PLAYING, game.getGameSituation().state)
+        assertEquals(1, game.getGameSituation().dropCount)
+        assertTrue(game.getGameSituation().retractionAvailable)
+    }
+
+    @Test
+    fun retractLast_afterBlackWon() {
+
+        val board: Board = mock()
+        val record: DropRecord = mock()
+        whenever(record.getDrop()).thenReturn(Drop(Location2D(7, 7), Stone.BLACK))
+        val history: History = mock()
+        whenever(history.retractLast()).thenReturn(record)
+        whenever(history.getRecordCount()).thenReturn(4)
+        whenever(history.getLastRecord()).thenReturn(record)
+        val rule: Rule = mock()
+        whenever(rule.judgeGameState(any())).thenReturn(GameState.BLACK_WON).thenReturn(GameState.PLAYING)
+        val game = GameImpl(board, history, rule)
+
+        assertEquals(GameState.BLACK_WON, game.getGameSituation().state)
+        game.retractLast()
+
+        verify(board).cleanCell(eq(Location2D(7, 7)))
+        assertEquals(Stone.BLACK, game.getGameSituation().roundActor)
+        assertEquals(GameState.PLAYING, game.getGameSituation().state)
+    }
+
+    @Test
+    fun retractLast_afterWhiteWon() {
+
+        val board: Board = mock()
+        val record: DropRecord = mock()
+        whenever(record.getDrop()).thenReturn(Drop(Location2D(8, 8), Stone.WHITE))
+        val history: History = mock()
+        whenever(history.retractLast()).thenReturn(record)
+        whenever(history.getRecordCount()).thenReturn(3)
+        whenever(history.getLastRecord()).thenReturn(record)
+        val rule: Rule = mock()
+        whenever(rule.judgeGameState(any())).thenReturn(GameState.WHITE_WON).thenReturn(GameState.PLAYING)
+        val game = GameImpl(board, history, rule)
+
+        assertEquals(GameState.WHITE_WON, game.getGameSituation().state)
+        game.retractLast()
+
+        verify(board).cleanCell(eq(Location2D(8, 8)))
+        assertEquals(Stone.WHITE, game.getGameSituation().roundActor)
+        assertEquals(GameState.PLAYING, game.getGameSituation().state)
+    }
+
+    @Test
+    fun retractLast_afterDraw() {
+
+        val board: Board = mock()
+        val record: DropRecord = mock()
+        whenever(record.getDrop()).thenReturn(Drop(Location2D(7, 7), Stone.WHITE))
+        val history: History = mock()
+        whenever(history.retractLast()).thenReturn(record)
+        whenever(history.getRecordCount()).thenReturn(5)
+        whenever(history.getLastRecord()).thenReturn(record)
+        val rule: Rule = mock()
+        whenever(rule.judgeGameState(any())).thenReturn(GameState.DRAW).thenReturn(GameState.PLAYING)
+        val game = GameImpl(board, history, rule)
+
+        assertEquals(GameState.DRAW, game.getGameSituation().state)
+        game.retractLast()
+
+        verify(board).cleanCell(eq(Location2D(7, 7)))
+        assertEquals(Stone.WHITE, game.getGameSituation().roundActor)
+        assertEquals(GameState.PLAYING, game.getGameSituation().state)
+    }
+
+    @Test
+    fun retractLast_withSingleStone() {
+
+        val board: Board = mock()
+        val record: DropRecord = mock()
+        whenever(record.getDrop()).thenReturn(Drop(Location2D(7, 7), Stone.BLACK))
+        val history: History = mock()
+        whenever(history.retractLast()).thenReturn(record)
+        whenever(history.getRecordCount()).thenReturn(0)
+        whenever(history.getLastRecord()).thenReturn(null)
+        val rule: Rule = mock()
+        whenever(rule.judgeGameState(any())).thenReturn(GameState.PLAYING)
+        val game = GameImpl(board, history, rule)
+
+        game.retractLast()
+
+        verify(board).cleanCell(eq(Location2D(7, 7)))
+        assertEquals(Stone.BLACK, game.getGameSituation().roundActor)
+        assertEquals(0, game.getGameSituation().dropCount)
+        assertFalse(game.getGameSituation().retractionAvailable)
+    }
+
+    @Test
+    fun retractLast_withZeroStones_throws() {
+
+        val board: Board = mock()
+        val history: History = mock()
+        whenever(history.retractLast()).thenReturn(null)
+        val rule: Rule = mock()
+        whenever(rule.judgeGameState(any())).thenReturn(GameState.PLAYING)
+        val game = GameImpl(board, history, rule)
+
+        assertThrows(RuntimeException::class.java) {
+            game.retractLast()
+        }
+    }
+
+    @Test
+    fun retractLast_boardStateReflectsRemoval() {
+
+        val board: Board = mock()
+        val record: DropRecord = mock()
+        whenever(record.getDrop()).thenReturn(Drop(Location2D(3, 4), Stone.WHITE))
+        val history: History = mock()
+        whenever(history.retractLast()).thenReturn(record)
+        whenever(history.getRecordCount()).thenReturn(2)
+        whenever(history.getLastRecord()).thenReturn(record)
+        val rule: Rule = mock()
+        whenever(rule.judgeGameState(any())).thenReturn(GameState.PLAYING)
+        val game = GameImpl(board, history, rule)
+
+        game.retractLast()
+
+        verify(board).cleanCell(eq(Location2D(3, 4)))
+        assertEquals(2, game.getGameSituation().dropCount)
+        assertTrue(game.getGameSituation().retractionAvailable)
+    }
 }

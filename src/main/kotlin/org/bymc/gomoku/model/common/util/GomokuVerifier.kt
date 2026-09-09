@@ -59,6 +59,46 @@ class GomokuVerifier(
     }
 
     /**
+     * Get all locations forming the winning line (>= 5 consecutive stones).
+     * Returns the locations on the first axis found with >= 5, or empty if no winning line exists.
+     */
+    fun getWinningLocations(): List<Location2D> {
+
+        val cell = boardViewModel.getCell(dropLocation)
+        val stone = cell.getStone() ?: return emptyList()
+
+        for (polar in Polar.getNormalizedPolars()) {
+            val count = countLinkedStones(cell, stone, polar)
+            if (count >= 5) {
+                return collectLinkedLocations(cell, stone, polar)
+            }
+        }
+        return emptyList()
+    }
+
+    /**
+     * Collect all linked stone locations along the given polar axis, including the drop location.
+     */
+    private fun collectLinkedLocations(cell: Cell, stone: Stone, polar: Polar): List<Location2D> {
+
+        val locations = mutableListOf(dropLocation)
+
+        // Collect near-end neighbors.
+        for (neighbor in cell.getNeighbors(polar.nearEnd)) {
+            if (neighbor.getStone() != stone) break
+            locations.add(neighbor.getLocation())
+        }
+
+        // Collect far-end neighbors.
+        for (neighbor in cell.getNeighbors(polar.farEnd)) {
+            if (neighbor.getStone() != stone) break
+            locations.add(neighbor.getLocation())
+        }
+
+        return locations
+    }
+
+    /**
      * 根据单元格和极轴统计连棋数量（含测试坐标的棋子）。
      */
     private fun countLinkedStones(cell: Cell, stone: Stone, polar: Polar): Int {

@@ -39,4 +39,10 @@ interface Game {
      * 执行悔棋。若当前局面不可悔棋，调用该方法将抛出异常。
      */
     fun retract()
+
+    /**
+     * 撤回最后一步落子。可在任意棋局状态下调用（PLAYING/BLACK_WON/WHITE_WON/DRAW）。
+     * 若当前无落子记录则抛出异常。
+     */
+    fun retractLast()
 }

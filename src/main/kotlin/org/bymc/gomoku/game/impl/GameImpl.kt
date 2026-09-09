@@ -124,6 +124,32 @@ class GameImpl(
     }
 
     /**
+     * 撤回最后一步落子。
+     */
+    override fun retractLast() {
+
+        // 从棋局历史中撤回最后一条记录。
+        val record = history.retractLast()
+            ?: throw RuntimeException("fails to retractLast caused by no drop records")
+
+        // 从棋枰上抹去要撤销的棋子。
+        board.cleanCell(record.getDrop().location)
+
+        // 交换回合执行方至前一手的执行方。
+        situation = situation.copy(roundActor = record.getDrop().stone)
+
+        // 重新判定棋局状态并更新游戏情况。
+        val gameState = rule.judgeGameState(board)
+        situation = situation.copy(
+            state = gameState,
+            dropCount = history.getRecordCount(),
+            retractionAvailable = history.getRecordCount() >= 1,
+            lastDropTime = history.getLastRecord()?.getTime(),
+            endTime = if (gameState != GameState.PLAYING) situation.endTime else null
+        )
+    }
+
+    /**
      * 交换回合执行方。
      */
     private fun swapRoundActor() {

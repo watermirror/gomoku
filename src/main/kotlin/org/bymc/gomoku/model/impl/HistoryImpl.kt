@@ -83,4 +83,15 @@ class HistoryImpl(
         }
         return retractedRecords
     }
+
+    /**
+     * 撤回最后一条落子记录并返回，若历史为空则返回 null。
+     */
+    override fun retractLast(): DropRecord? {
+
+        if (records.isEmpty()) {
+            return null
+        }
+        return records.removeLast()
+    }
 }

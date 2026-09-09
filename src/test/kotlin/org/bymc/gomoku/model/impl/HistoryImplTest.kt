@@ -182,4 +182,71 @@ internal class HistoryImplTest {
         )
         assertEquals(2, history.getRecordCount())
     }
+
+    @Test
+    fun retractLast_fromMultiRecordHistory() {
+
+        val timestamp = Date()
+        val history = HistoryImpl(timestamp)
+        history.appendRecord(Drop(Location2D(7, 7), Stone.BLACK), timestamp)
+        history.appendRecord(Drop(Location2D(8, 8), Stone.WHITE), timestamp)
+        history.appendRecord(Drop(Location2D(9, 9), Stone.BLACK), timestamp)
+
+        val result = history.retractLast()
+        assertNotNull(result)
+        assertEquals(Drop(Location2D(9, 9), Stone.BLACK), result!!.getDrop())
+        assertEquals(2, result.getOrder())
+        assertEquals(2, history.getRecordCount())
+
+        // Verify remaining records are untouched.
+        assertEquals(Drop(Location2D(7, 7), Stone.BLACK), history.getRecord(0).getDrop())
+        assertEquals(Drop(Location2D(8, 8), Stone.WHITE), history.getRecord(1).getDrop())
+    }
+
+    @Test
+    fun retractLast_fromSingleRecordHistory() {
+
+        val timestamp = Date()
+        val history = HistoryImpl(timestamp)
+        history.appendRecord(Drop(Location2D(7, 7), Stone.BLACK), timestamp)
+
+        val result = history.retractLast()
+        assertNotNull(result)
+        assertEquals(Drop(Location2D(7, 7), Stone.BLACK), result!!.getDrop())
+        assertEquals(0, result.getOrder())
+        assertEquals(0, history.getRecordCount())
+    }
+
+    @Test
+    fun retractLast_fromEmptyHistory() {
+
+        val timestamp = Date()
+        val history = HistoryImpl(timestamp)
+
+        val result = history.retractLast()
+        assertNull(result)
+        assertEquals(0, history.getRecordCount())
+    }
+
+    @Test
+    fun retractLast_remainingRecordsUntouched() {
+
+        val timestamp = Date()
+        val history = HistoryImpl(timestamp)
+        history.appendRecord(Drop(Location2D(7, 7), Stone.BLACK), timestamp)
+        history.appendRecord(Drop(Location2D(8, 8), Stone.WHITE), timestamp)
+        history.appendRecord(Drop(Location2D(9, 9), Stone.BLACK), timestamp)
+        history.appendRecord(Drop(Location2D(10, 10), Stone.WHITE), timestamp)
+
+        history.retractLast()
+        assertEquals(3, history.getRecordCount())
+        assertEquals(Drop(Location2D(7, 7), Stone.BLACK), history.getRecord(0).getDrop())
+        assertEquals(Drop(Location2D(8, 8), Stone.WHITE), history.getRecord(1).getDrop())
+        assertEquals(Drop(Location2D(9, 9), Stone.BLACK), history.getRecord(2).getDrop())
+
+        history.retractLast()
+        assertEquals(2, history.getRecordCount())
+        assertEquals(Drop(Location2D(7, 7), Stone.BLACK), history.getRecord(0).getDrop())
+        assertEquals(Drop(Location2D(8, 8), Stone.WHITE), history.getRecord(1).getDrop())
+    }
 }

@@ -21,4 +21,9 @@ interface HistoryOperator {
      * 指定执行方的前提下进行悔棋，返回撤回的落子记录。
      */
     fun retract(actor: Stone): List<DropRecord>
+
+    /**
+     * 撤回最后一条落子记录并返回，若历史为空则返回 null。
+     */
+    fun retractLast(): DropRecord?
 }
