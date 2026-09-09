@@ -206,4 +206,99 @@ class DefaultUiConfig : UiConfig {
      * 对战模式按钮文案字体尺寸。
      */
     override fun getDualButtonFontSize(): Int = getChallengeAiButtonFontSize()
+
+    /**
+     * 获取进入游戏动画时长。
+     */
+    override fun getEnterGameAnimationDuration(): Duration = Duration.ofMillis(500)
+
+    /**
+     * 获取退出游戏动画时长。
+     */
+    override fun getExitGameAnimationDuration(): Duration = Duration.ofMillis(500)
+
+    /**
+     * 获取侧面板宽度。
+     */
+    override fun getSidePanelWidth(): Int = getControlPanelWidth()
+
+    /**
+     * 获取侧面板高度。
+     */
+    override fun getSidePanelHeight(): Int = getBoardSize().height
+
+    /**
+     * 获取侧面板按钮尺寸。
+     */
+    override fun getSidePanelButtonSize(): Dimension = Dimension(200, 40)
+
+    /**
+     * 获取侧面板按钮字体尺寸。
+     */
+    override fun getSidePanelButtonFontSize(): Int = 18
+
+    /**
+     * 获取侧面板标签尺寸。
+     */
+    override fun getSidePanelLabelSize(): Dimension = Dimension(260, 36)
+
+    /**
+     * 获取侧面板标签字体尺寸。
+     */
+    override fun getSidePanelLabelFontSize(): Int = 18
+
+    /**
+     * 获取侧面板状态标签字体尺寸。
+     */
+    override fun getSidePanelStatusLabelFontSize(): Int = 16
+
+    /**
+     * 获取侧面板内边距。
+     */
+    override fun getSidePanelMargin(): Int = 20
+
+    /**
+     * 获取侧面板元素间距。
+     */
+    override fun getSidePanelSpacing(): Int = 15
+
+    /**
+     * 获取规则选择覆盖层尺寸。
+     */
+    override fun getRuleSelectionOverlaySize(): Dimension = Dimension(350, 400)
+
+    /**
+     * 获取规则选择覆盖层按钮尺寸。
+     */
+    override fun getRuleSelectionOverlayButtonSize(): Dimension = Dimension(120, 36)
+
+    /**
+     * 获取规则选择覆盖层按钮字体尺寸。
+     */
+    override fun getRuleSelectionOverlayButtonFontSize(): Int = 16
+
+    /**
+     * 获取规则选择覆盖层标签尺寸。
+     */
+    override fun getRuleSelectionOverlayLabelSize(): Dimension = Dimension(260, 36)
+
+    /**
+     * 获取规则选择覆盖层标签字体尺寸。
+     */
+    override fun getRuleSelectionOverlayLabelFontSize(): Int = 18
+
+    /**
+     * 获取规则选择覆盖层开关尺寸。
+     */
+    override fun getRuleSelectionOverlaySwitchSize(): Dimension = Dimension(46, 24)
+
+    /**
+     * 获取规则选择覆盖层内边距。
+     */
+    override fun getRuleSelectionOverlayMargin(): Int = 30
+
+    /**
+     * 获取规则选择覆盖层元素间距。
+     */
+    override fun getRuleSelectionOverlaySpacing(): Int = 15
 }

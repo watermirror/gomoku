@@ -181,4 +181,99 @@ interface UiConfig {
      * 对战模式按钮文案字体尺寸。
      */
     fun getDualButtonFontSize(): Int
+
+    /**
+     * 获取进入游戏动画时长。
+     */
+    fun getEnterGameAnimationDuration(): Duration
+
+    /**
+     * 获取退出游戏动画时长。
+     */
+    fun getExitGameAnimationDuration(): Duration
+
+    /**
+     * 获取侧面板宽度。
+     */
+    fun getSidePanelWidth(): Int
+
+    /**
+     * 获取侧面板高度。
+     */
+    fun getSidePanelHeight(): Int
+
+    /**
+     * 获取侧面板按钮尺寸。
+     */
+    fun getSidePanelButtonSize(): Dimension
+
+    /**
+     * 获取侧面板按钮字体尺寸。
+     */
+    fun getSidePanelButtonFontSize(): Int
+
+    /**
+     * 获取侧面板标签尺寸。
+     */
+    fun getSidePanelLabelSize(): Dimension
+
+    /**
+     * 获取侧面板标签字体尺寸。
+     */
+    fun getSidePanelLabelFontSize(): Int
+
+    /**
+     * 获取侧面板状态标签字体尺寸。
+     */
+    fun getSidePanelStatusLabelFontSize(): Int
+
+    /**
+     * 获取侧面板内边距。
+     */
+    fun getSidePanelMargin(): Int
+
+    /**
+     * 获取侧面板元素间距。
+     */
+    fun getSidePanelSpacing(): Int
+
+    /**
+     * 获取规则选择覆盖层尺寸。
+     */
+    fun getRuleSelectionOverlaySize(): Dimension
+
+    /**
+     * 获取规则选择覆盖层按钮尺寸。
+     */
+    fun getRuleSelectionOverlayButtonSize(): Dimension
+
+    /**
+     * 获取规则选择覆盖层按钮字体尺寸。
+     */
+    fun getRuleSelectionOverlayButtonFontSize(): Int
+
+    /**
+     * 获取规则选择覆盖层标签尺寸。
+     */
+    fun getRuleSelectionOverlayLabelSize(): Dimension
+
+    /**
+     * 获取规则选择覆盖层标签字体尺寸。
+     */
+    fun getRuleSelectionOverlayLabelFontSize(): Int
+
+    /**
+     * 获取规则选择覆盖层开关尺寸。
+     */
+    fun getRuleSelectionOverlaySwitchSize(): Dimension
+
+    /**
+     * 获取规则选择覆盖层内边距。
+     */
+    fun getRuleSelectionOverlayMargin(): Int
+
+    /**
+     * 获取规则选择覆盖层元素间距。
+     */
+    fun getRuleSelectionOverlaySpacing(): Int
 }

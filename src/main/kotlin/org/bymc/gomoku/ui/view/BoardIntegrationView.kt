@@ -2,6 +2,7 @@ package org.bymc.gomoku.ui.view
 
 import org.bymc.gomoku.model.abstraction.BoardViewModel
 import org.bymc.gomoku.model.abstraction.HistoryViewModel
+import org.bymc.gomoku.model.common.param.Location2D
 import org.bymc.gomoku.uifx.view.base.ViewBase
 import java.awt.Point
 import java.awt.Rectangle
@@ -87,6 +88,16 @@ class BoardIntegrationView(
         gridView.setBoardViewModel(boardViewModel)
         gridView.setHistoryViewModel(historyViewModel)
     }
+
+    /**
+     * Flash a cell with a red overlay.
+     */
+    fun flashCell(location: Location2D) = gridView.flashCell(location)
+
+    /**
+     * Set the winning stone locations to highlight.
+     */
+    fun setWinningLocations(locations: List<Location2D>) = gridView.setWinningLocations(locations)
 
     /**
      * 添加传感器事件监听器。

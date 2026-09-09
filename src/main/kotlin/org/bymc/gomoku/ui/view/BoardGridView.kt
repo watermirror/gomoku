@@ -9,6 +9,7 @@ import java.awt.Color
 import java.awt.Graphics
 import java.awt.Point
 import java.awt.Rectangle
+import javax.swing.Timer
 import kotlin.math.max
 
 /**
@@ -86,7 +87,28 @@ class BoardGridView(
          * 最后落点标记的尺寸比例。
          */
         private const val lastMarkSizeRatio: Double = 0.8 / 3.0
+
+        /**
+         * Winning highlight circle size ratio, a full cell so the visible
+         * ring around each stone is wide enough.
+         */
+        private const val winningHighlightSizeRatio: Double = 1.0
     }
+
+    /**
+     * Locations of the winning stones to highlight.
+     */
+    private var winningLocations: Set<Location2D> = emptySet()
+
+    /**
+     * Current flash cell location, null when no flash is active.
+     */
+    private var flashLocation: Location2D? = null
+
+    /**
+     * Timer for clearing the flash after 300ms.
+     */
+    private var flashTimer: Timer? = null
 
     init {
 
@@ -102,14 +124,22 @@ class BoardGridView(
      */
     fun setBoardViewModel(model: BoardViewModel?) {
 
-        if (model == boardViewModel) { return }
-
         // 校验视图模型的尺寸。
         if (model != null && (model.getSize().width != edgeCapacity || model.getSize().height != edgeCapacity)) {
             throw RuntimeException("setBoardViewModel: model.getSize() does not match edgeCapacity")
         }
 
         boardViewModel = model
+        winningLocations = emptySet()
+        scheduleRender()
+    }
+
+    /**
+     * Set the winning stone locations to highlight.
+     */
+    fun setWinningLocations(locations: List<Location2D>) {
+
+        winningLocations = locations.toSet()
         scheduleRender()
     }
 
@@ -118,9 +148,26 @@ class BoardGridView(
      */
     fun setHistoryViewModel(model: HistoryViewModel?) {
 
-        if (model == historyViewModel) { return }
         historyViewModel = model
         scheduleRender()
+    }
+
+    /**
+     * Flash a cell with a red overlay for ~300ms.
+     */
+    fun flashCell(location: Location2D) {
+
+        flashTimer?.stop()
+        flashLocation = location
+        scheduleRender(null)
+
+        flashTimer = Timer(300) {
+            flashLocation = null
+            scheduleRender(null)
+        }.also {
+            it.isRepeats = false
+            it.start()
+        }
     }
 
     /**
@@ -128,12 +175,23 @@ class BoardGridView(
      */
     override fun onRender(g: Graphics, range: Rectangle) {
 
-        // 绘制静态棋枰。
+        // 绘制静态棋枰背景。
         drawStaticBoard(g)
+
+        // Draw winning highlights beneath the stones, so only the board
+        // background around each winning stone is tinted.
+        drawWinningHighlights(g)
+
+        // 绘制棋子与最后落点。
+        drawStones(g)
+        drawLastDrop(g)
+
+        // Draw flash overlay if active.
+        drawFlash(g)
     }
 
     /**
-     * 绘制静态棋枰。
+     * 绘制静态棋枰背景。
      */
     private fun drawStaticBoard(g: Graphics) {
 
@@ -143,8 +201,6 @@ class BoardGridView(
         drawStaticGrid(g)
         drawStaticBorder(g)
         drawStaticStarts(g)
-        drawStones(g)
-        drawLastDrop(g)
 
         g.color = originalColor
     }
@@ -304,5 +360,44 @@ class BoardGridView(
             realMarkSize,
             realMarkSize
         )
+    }
+
+    /**
+     * Draw translucent green circle beneath the winning stones, slightly
+     * larger than a stone, so the board background around them is tinted.
+     */
+    private fun drawWinningHighlights(g: Graphics) {
+
+        if (winningLocations.isEmpty()) return
+        val originalColor = g.color
+        g.color = Color(50, 205, 50, 160)
+        val diameter = (cellSize * winningHighlightSizeRatio).toInt()
+        val offset = (cellSize - diameter) / 2
+        for (location in winningLocations) {
+            g.fillOval(
+                boardOriginalPoint.x + cellSize * location.x + offset,
+                boardOriginalPoint.y + cellSize * location.y + offset,
+                diameter,
+                diameter
+            )
+        }
+        g.color = originalColor
+    }
+
+    /**
+     * Draw red flash overlay on specified cell.
+     */
+    private fun drawFlash(g: Graphics) {
+
+        val location = flashLocation ?: return
+        val originalColor = g.color
+        g.color = Color(255, 0, 0, 128)
+        g.fillRect(
+            boardOriginalPoint.x + cellSize * location.x,
+            boardOriginalPoint.y + cellSize * location.y,
+            cellSize,
+            cellSize
+        )
+        g.color = originalColor
     }
 }
