@@ -89,10 +89,10 @@ class BoardGridView(
         private const val lastMarkSizeRatio: Double = 0.8 / 3.0
 
         /**
-         * Winning highlight circle size ratio, a full cell so the visible
-         * ring around each stone is wide enough.
+         * Winning highlight circle size ratio, larger than a cell so the
+         * visible ring around each stone is wide enough.
          */
-        private const val winningHighlightSizeRatio: Double = 1.0
+        private const val winningHighlightSizeRatio: Double = 1.1
     }
 
     /**
