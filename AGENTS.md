@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to AI coding agents when working with code in this repository.
 
 ## Tips
 
@@ -79,7 +79,7 @@ Follow Conventional Commits style:
 - `test:` for test changes
 - `docs:` for documentation updates
 
-**Important**: Do not include any AI/Claude attribution in commit messages (no "Generated with Claude", "Co-Authored-By: Claude", etc.)
+**Important**: Do not include any AI/agent attribution in commit messages (no "Generated with Claude", "Co-Authored-By: Claude", etc.)
 
 ## Git Push Rules
 
