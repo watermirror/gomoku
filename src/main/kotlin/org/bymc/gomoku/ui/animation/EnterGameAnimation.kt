@@ -34,15 +34,27 @@ class EnterGameAnimation(
     private var listener: EnterGameAnimationEventListener? = null
 
     private val duration = uiConfig.getEnterGameAnimationDuration()
-    private val easeFunction = EaseFunctions.easeInOut()
 
-    // Board: current position -> left-aligned (x=0)
+    // Overshoot easing for all elements; fixed base areas keep the overshoot bounded to a slight bounce.
+    private val easeFunction = EaseFunctions.easeInOutBack()
+
+    // Staggered start delays: title panel leaves first, then buttons one by one; side panel follows the board.
+    private val panelDelay = uiConfig.getGameAnimationPanelDelay()
+    private val buttonDelayStep = uiConfig.getGameAnimationButtonDelayStep()
+
+    // Board: centered -> left-aligned (x=0)
     private val boardAnimator: Animator = Animators.viewAreaAnimator(
         duration, easeFunction, boardView,
-        Rectangle(0, 0, uiConfig.getBoardSize().width, uiConfig.getBoardSize().height)
+        Rectangle(0, 0, uiConfig.getBoardSize().width, uiConfig.getBoardSize().height),
+        Rectangle(
+            (uiConfig.getMainWindowClientSize().width - uiConfig.getBoardSize().width) / 2,
+            0,
+            uiConfig.getBoardSize().width,
+            uiConfig.getBoardSize().height
+        )
     )
 
-    // Title panel: current position -> off-screen left (extra 10px margin to hide shadow)
+    // Title panel: center -> off-screen left (extra 10px margin to hide shadow)
     private val titlePanelAnimator: Animator = Animators.viewAreaAnimator(
         duration, easeFunction, titlePanelView,
         Rectangle(
@@ -50,10 +62,16 @@ class EnterGameAnimation(
             (uiConfig.getMainWindowClientSize().height - uiConfig.getTitlePanelSize().height) / 2,
             uiConfig.getTitlePanelSize().width,
             uiConfig.getTitlePanelSize().height
+        ),
+        Rectangle(
+            (uiConfig.getMainWindowClientSize().width - uiConfig.getTitlePanelSize().width) / 2,
+            (uiConfig.getMainWindowClientSize().height - uiConfig.getTitlePanelSize().height) / 2,
+            uiConfig.getTitlePanelSize().width,
+            uiConfig.getTitlePanelSize().height
         )
     )
 
-    // Self-study button: current position -> off-screen left (extra 10px margin to hide shadow)
+    // Self-study button: center -> off-screen left (extra 10px margin to hide shadow)
     private val selfStudyBtnAnimator: Animator = Animators.viewAreaAnimator(
         duration, easeFunction, selfStudyButtonView,
         Rectangle(
@@ -61,10 +79,17 @@ class EnterGameAnimation(
             uiConfig.getSelfStudyButtonTopMargin(),
             uiConfig.getSelfStudyButtonSize().width,
             uiConfig.getSelfStudyButtonSize().height
-        )
+        ),
+        Rectangle(
+            (uiConfig.getMainWindowClientSize().width - uiConfig.getSelfStudyButtonSize().width) / 2,
+            uiConfig.getSelfStudyButtonTopMargin(),
+            uiConfig.getSelfStudyButtonSize().width,
+            uiConfig.getSelfStudyButtonSize().height
+        ),
+        buttonDelayStep
     )
 
-    // Challenge AI button: current position -> off-screen left (extra 10px margin to hide shadow)
+    // Challenge AI button: center -> off-screen left (extra 10px margin to hide shadow)
     private val challengeAiBtnAnimator: Animator = Animators.viewAreaAnimator(
         duration, easeFunction, challengeAiButtonView,
         Rectangle(
@@ -72,10 +97,17 @@ class EnterGameAnimation(
             uiConfig.getChallengeAiButtonTopMargin(),
             uiConfig.getChallengeAiButtonSize().width,
             uiConfig.getChallengeAiButtonSize().height
-        )
+        ),
+        Rectangle(
+            (uiConfig.getMainWindowClientSize().width - uiConfig.getChallengeAiButtonSize().width) / 2,
+            uiConfig.getChallengeAiButtonTopMargin(),
+            uiConfig.getChallengeAiButtonSize().width,
+            uiConfig.getChallengeAiButtonSize().height
+        ),
+        buttonDelayStep.multipliedBy(2)
     )
 
-    // Dual button: current position -> off-screen left (extra 10px margin to hide shadow)
+    // Dual button: center -> off-screen left (extra 10px margin to hide shadow)
     private val dualBtnAnimator: Animator = Animators.viewAreaAnimator(
         duration, easeFunction, dualButtonView,
         Rectangle(
@@ -83,7 +115,14 @@ class EnterGameAnimation(
             uiConfig.getDualButtonTopMargin(),
             uiConfig.getDualButtonSize().width,
             uiConfig.getDualButtonSize().height
-        )
+        ),
+        Rectangle(
+            (uiConfig.getMainWindowClientSize().width - uiConfig.getDualButtonSize().width) / 2,
+            uiConfig.getDualButtonTopMargin(),
+            uiConfig.getDualButtonSize().width,
+            uiConfig.getDualButtonSize().height
+        ),
+        buttonDelayStep.multipliedBy(3)
     )
 
     // Side panel: off-screen right -> right of board
@@ -94,7 +133,14 @@ class EnterGameAnimation(
             0,
             uiConfig.getSidePanelWidth(),
             uiConfig.getSidePanelHeight()
-        )
+        ),
+        Rectangle(
+            uiConfig.getMainWindowClientSize().width,
+            0,
+            uiConfig.getSidePanelWidth(),
+            uiConfig.getSidePanelHeight()
+        ),
+        panelDelay
     )
 
     init {

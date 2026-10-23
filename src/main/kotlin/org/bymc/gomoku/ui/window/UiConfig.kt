@@ -193,6 +193,21 @@ interface UiConfig {
     fun getExitGameAnimationDuration(): Duration
 
     /**
+     * 获取进入/退出游戏动画中面板类元素的启动延迟（进入=侧面板入场，退出=标题面板入场）。
+     */
+    fun getGameAnimationPanelDelay(): Duration
+
+    /**
+     * 获取退出游戏动画中第一个按钮动画的启动延迟。
+     */
+    fun getGameAnimationButtonDelayBase(): Duration
+
+    /**
+     * 获取进入/退出游戏动画中按钮动画的启动延迟递增步长。
+     */
+    fun getGameAnimationButtonDelayStep(): Duration
+
+    /**
      * 获取侧面板宽度。
      */
     fun getSidePanelWidth(): Int

@@ -210,12 +210,27 @@ class DefaultUiConfig : UiConfig {
     /**
      * 获取进入游戏动画时长。
      */
-    override fun getEnterGameAnimationDuration(): Duration = Duration.ofMillis(500)
+    override fun getEnterGameAnimationDuration(): Duration = Duration.ofMillis(1000)
 
     /**
      * 获取退出游戏动画时长。
      */
-    override fun getExitGameAnimationDuration(): Duration = Duration.ofMillis(500)
+    override fun getExitGameAnimationDuration(): Duration = Duration.ofMillis(1000)
+
+    /**
+     * 获取进入/退出游戏动画中面板类元素的启动延迟（进入=侧面板入场，退出=标题面板入场）。
+     */
+    override fun getGameAnimationPanelDelay(): Duration = Duration.ofMillis(200)
+
+    /**
+     * 获取退出游戏动画中第一个按钮动画的启动延迟。
+     */
+    override fun getGameAnimationButtonDelayBase(): Duration = Duration.ofMillis(300)
+
+    /**
+     * 获取进入/退出游戏动画中按钮动画的启动延迟递增步长。
+     */
+    override fun getGameAnimationButtonDelayStep(): Duration = Duration.ofMillis(100)
 
     /**
      * 获取侧面板宽度。

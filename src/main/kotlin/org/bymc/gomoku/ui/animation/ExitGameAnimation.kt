@@ -34,13 +34,26 @@ class ExitGameAnimation(
     private var listener: ExitGameAnimationEventListener? = null
 
     private val duration = uiConfig.getExitGameAnimationDuration()
-    private val easeFunction = EaseFunctions.easeInOut()
+
+    // Overshoot easing for all elements; fixed base areas keep the overshoot bounded to a slight bounce.
+    private val easeFunction = EaseFunctions.easeInOutBack()
+
+    // Staggered start delays: title panel enters after the board slides back, then buttons one by one.
+    private val panelDelay = uiConfig.getGameAnimationPanelDelay()
+    private val buttonDelayBase = uiConfig.getGameAnimationButtonDelayBase()
+    private val buttonDelayStep = uiConfig.getGameAnimationButtonDelayStep()
 
     // Side panel: right of board -> off-screen right
     private val sidePanelAnimator: Animator = Animators.viewAreaAnimator(
         duration, easeFunction, sidePanelView,
         Rectangle(
             uiConfig.getMainWindowClientSize().width,
+            0,
+            uiConfig.getSidePanelWidth(),
+            uiConfig.getSidePanelHeight()
+        ),
+        Rectangle(
+            uiConfig.getBoardSize().width,
             0,
             uiConfig.getSidePanelWidth(),
             uiConfig.getSidePanelHeight()
@@ -55,7 +68,8 @@ class ExitGameAnimation(
             0,
             uiConfig.getBoardSize().width,
             uiConfig.getBoardSize().height
-        )
+        ),
+        Rectangle(0, 0, uiConfig.getBoardSize().width, uiConfig.getBoardSize().height)
     )
 
     // Title panel: off-screen left -> center
@@ -66,7 +80,14 @@ class ExitGameAnimation(
             (uiConfig.getMainWindowClientSize().height - uiConfig.getTitlePanelSize().height) / 2,
             uiConfig.getTitlePanelSize().width,
             uiConfig.getTitlePanelSize().height
-        )
+        ),
+        Rectangle(
+            -uiConfig.getTitlePanelSize().width - 10,
+            (uiConfig.getMainWindowClientSize().height - uiConfig.getTitlePanelSize().height) / 2,
+            uiConfig.getTitlePanelSize().width,
+            uiConfig.getTitlePanelSize().height
+        ),
+        panelDelay
     )
 
     // Self-study button: off-screen left -> center
@@ -77,7 +98,14 @@ class ExitGameAnimation(
             uiConfig.getSelfStudyButtonTopMargin(),
             uiConfig.getSelfStudyButtonSize().width,
             uiConfig.getSelfStudyButtonSize().height
-        )
+        ),
+        Rectangle(
+            -uiConfig.getSelfStudyButtonSize().width - 10,
+            uiConfig.getSelfStudyButtonTopMargin(),
+            uiConfig.getSelfStudyButtonSize().width,
+            uiConfig.getSelfStudyButtonSize().height
+        ),
+        buttonDelayBase
     )
 
     // Challenge AI button: off-screen left -> center
@@ -88,7 +116,14 @@ class ExitGameAnimation(
             uiConfig.getChallengeAiButtonTopMargin(),
             uiConfig.getChallengeAiButtonSize().width,
             uiConfig.getChallengeAiButtonSize().height
-        )
+        ),
+        Rectangle(
+            -uiConfig.getChallengeAiButtonSize().width - 10,
+            uiConfig.getChallengeAiButtonTopMargin(),
+            uiConfig.getChallengeAiButtonSize().width,
+            uiConfig.getChallengeAiButtonSize().height
+        ),
+        buttonDelayBase.plus(buttonDelayStep)
     )
 
     // Dual button: off-screen left -> center
@@ -99,7 +134,14 @@ class ExitGameAnimation(
             uiConfig.getDualButtonTopMargin(),
             uiConfig.getDualButtonSize().width,
             uiConfig.getDualButtonSize().height
-        )
+        ),
+        Rectangle(
+            -uiConfig.getDualButtonSize().width - 10,
+            uiConfig.getDualButtonTopMargin(),
+            uiConfig.getDualButtonSize().width,
+            uiConfig.getDualButtonSize().height
+        ),
+        buttonDelayBase.plus(buttonDelayStep.multipliedBy(2))
     )
 
     init {
