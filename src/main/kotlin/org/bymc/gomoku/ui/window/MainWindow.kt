@@ -368,6 +368,8 @@ class MainWindow(
     override fun onReturnClicked() {
 
         boardView.disable()
+        // Clear stones before the animation starts, so the empty board slides back to the title screen.
+        boardView.setViewModels(null, null)
         exitGameAnimation.play()
     }
 
