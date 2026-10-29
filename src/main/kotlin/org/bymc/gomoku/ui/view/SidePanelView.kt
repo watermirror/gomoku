@@ -159,6 +159,16 @@ class SidePanelView(
     }
 
     /**
+     * Show victory message from the player's perspective (challenge-AI mode).
+     */
+    fun showVictory(winner: Stone, userStone: Stone) {
+
+        val winnerText = if (winner == userStone) "你赢了!" else "你输了!"
+        statusLabel.setTest(winnerText)
+        statusLabel.setTextColor(Color(200, 0, 0))
+    }
+
+    /**
      * Show draw message.
      */
     fun showDraw() {

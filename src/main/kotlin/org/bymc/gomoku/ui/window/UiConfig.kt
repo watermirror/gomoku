@@ -208,6 +208,11 @@ interface UiConfig {
     fun getGameAnimationButtonDelayStep(): Duration
 
     /**
+     * 获取 AI 落子延迟。
+     */
+    fun getAiDropDelay(): Duration
+
+    /**
      * 获取侧面板宽度。
      */
     fun getSidePanelWidth(): Int
@@ -281,6 +286,11 @@ interface UiConfig {
      * 获取规则选择覆盖层开关尺寸。
      */
     fun getRuleSelectionOverlaySwitchSize(): Dimension
+
+    /**
+     * 获取规则选择覆盖层执子选择按钮尺寸。
+     */
+    fun getRuleSelectionOverlayStoneButtonSize(): Dimension
 
     /**
      * 获取规则选择覆盖层内边距。

@@ -1,5 +1,6 @@
 package org.bymc.gomoku.ui.view
 
+import org.bymc.gomoku.model.common.param.Stone
 import org.bymc.gomoku.ui.window.UiConfig
 import org.bymc.gomoku.uifx.view.LabelView
 import org.bymc.gomoku.uifx.view.LabelViewEventListener
@@ -40,6 +41,7 @@ class RuleSelectionOverlayView(
     private val buttonSize = uiConfig.getRuleSelectionOverlayButtonSize()
     private val buttonFontSize = uiConfig.getRuleSelectionOverlayButtonFontSize()
     private val switchSize = uiConfig.getRuleSelectionOverlaySwitchSize()
+    private val stoneButtonSize = uiConfig.getRuleSelectionOverlayStoneButtonSize()
 
     /**
      * Title label.
@@ -71,6 +73,48 @@ class RuleSelectionOverlayView(
     private val ttnhSwitch: ToggleSwitchView = createSwitch(rowTop(0))
     private val ffnhSwitch: ToggleSwitchView = createSwitch(rowTop(1))
     private val olnhSwitch: ToggleSwitchView = createSwitch(rowTop(2))
+
+    /**
+     * Stone selection row: label plus two mutually exclusive buttons. The selected one is
+     * disabled (highlighted as current choice) while the other stays clickable.
+     */
+    private val stoneLabel: LabelView = LabelView(
+        text = "执子",
+        area = Rectangle(
+            (uiConfig.getRuleSelectionOverlaySize().width - labelSize.width) / 2,
+            rowTop(3),
+            labelSize.width - switchSize.width - spacing,
+            labelSize.height
+        ),
+        bgColor = null,
+        fontConfig = FontConfig(fontSize = labelFontSize),
+        insets = Insets(4, 12, 4, 4),
+        horizontalAlignment = HorizontalAlignment.LEFT
+    )
+
+    private val blackStoneButton: SimpleTextButtonView = SimpleTextButtonView(
+        text = "黑棋",
+        area = Rectangle(
+            (uiConfig.getRuleSelectionOverlaySize().width - labelSize.width) / 2 + labelSize.width -
+                    stoneButtonSize.width * 2 - 8,
+            rowTop(3) + (labelSize.height - stoneButtonSize.height) / 2,
+            stoneButtonSize.width,
+            stoneButtonSize.height
+        ),
+        fontConfig = FontConfig(fontSize = labelFontSize - 3)
+    )
+
+    private val whiteStoneButton: SimpleTextButtonView = SimpleTextButtonView(
+        text = "白棋",
+        area = Rectangle(
+            (uiConfig.getRuleSelectionOverlaySize().width - labelSize.width) / 2 + labelSize.width -
+                    stoneButtonSize.width,
+            rowTop(3) + (labelSize.height - stoneButtonSize.height) / 2,
+            stoneButtonSize.width,
+            stoneButtonSize.height
+        ),
+        fontConfig = FontConfig(fontSize = labelFontSize - 3)
+    )
 
     /**
      * Start and cancel buttons.
@@ -106,15 +150,23 @@ class RuleSelectionOverlayView(
         addSubView(ttnhSwitch)
         addSubView(ffnhSwitch)
         addSubView(olnhSwitch)
+        addSubView(stoneLabel)
+        addSubView(blackStoneButton)
+        addSubView(whiteStoneButton)
 
         ttnhLabel.addEventListener(this)
         ffnhLabel.addEventListener(this)
         olnhLabel.addEventListener(this)
 
+        blackStoneButton.addEventListener(this)
+        whiteStoneButton.addEventListener(this)
+
         startButton.addEventListener(this)
         cancelButton.addEventListener(this)
         addSubView(startButton)
         addSubView(cancelButton)
+
+        selectStone(Stone.BLACK)
     }
 
     /**
@@ -128,13 +180,24 @@ class RuleSelectionOverlayView(
     }
 
     /**
-     * Reset all switches to default checked state.
+     * Reset all switches to default checked state and stone selection to black.
      */
     fun resetDefaults() {
 
         ttnhSwitch.setChecked(true, animate = false)
         ffnhSwitch.setChecked(true, animate = false)
         olnhSwitch.setChecked(true, animate = false)
+        selectStone(Stone.BLACK)
+    }
+
+    /**
+     * Show or hide the stone selection row. Hidden by default for self-study mode.
+     */
+    fun setStoneSelectionVisible(visible: Boolean) {
+
+        stoneLabel.setShowing(visible)
+        blackStoneButton.setShowing(visible)
+        whiteStoneButton.setShowing(visible)
     }
 
     /**
@@ -157,11 +220,42 @@ class RuleSelectionOverlayView(
 
         when (sender) {
             startButton -> listeners.forEach {
-                it.onStartClicked(ttnhSwitch.isChecked(), ffnhSwitch.isChecked(), olnhSwitch.isChecked())
+                it.onStartClicked(
+                    ttnhSwitch.isChecked(),
+                    ffnhSwitch.isChecked(),
+                    olnhSwitch.isChecked(),
+                    getSelectedStone()
+                )
             }
             cancelButton -> listeners.forEach { it.onCancelClicked() }
+            blackStoneButton -> selectStone(Stone.BLACK)
+            whiteStoneButton -> selectStone(Stone.WHITE)
         }
     }
+
+    /**
+     * Select the given stone: disable the chosen button (marked as current) and enable the other.
+     */
+    private fun selectStone(stone: Stone) {
+
+        when (stone) {
+            Stone.BLACK -> {
+                if (!blackStoneButton.isEnabled()) { return }
+                blackStoneButton.disable()
+                whiteStoneButton.enable()
+            }
+            Stone.WHITE -> {
+                if (!whiteStoneButton.isEnabled()) { return }
+                whiteStoneButton.disable()
+                blackStoneButton.enable()
+            }
+        }
+    }
+
+    /**
+     * Get the currently selected stone. The disabled one is the current selection.
+     */
+    private fun getSelectedStone(): Stone = if (!blackStoneButton.isEnabled()) Stone.BLACK else Stone.WHITE
 
     /**
      * Rule name label click handler, toggles the corresponding switch.

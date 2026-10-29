@@ -233,6 +233,11 @@ class DefaultUiConfig : UiConfig {
     override fun getGameAnimationButtonDelayStep(): Duration = Duration.ofMillis(100)
 
     /**
+     * 获取 AI 落子延迟。
+     */
+    override fun getAiDropDelay(): Duration = Duration.ofMillis(500)
+
+    /**
      * 获取侧面板宽度。
      */
     override fun getSidePanelWidth(): Int = getControlPanelWidth()
@@ -306,6 +311,11 @@ class DefaultUiConfig : UiConfig {
      * 获取规则选择覆盖层开关尺寸。
      */
     override fun getRuleSelectionOverlaySwitchSize(): Dimension = Dimension(46, 24)
+
+    /**
+     * 获取规则选择覆盖层执子选择按钮尺寸。
+     */
+    override fun getRuleSelectionOverlayStoneButtonSize(): Dimension = Dimension(70, 30)
 
     /**
      * 获取规则选择覆盖层内边距。
