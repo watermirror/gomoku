@@ -27,3 +27,9 @@ dist/
 nbdist/
 
 .DS_Store
+
+# pi coding agent local data
+.pi/
+
+# speckit local workflow state
+.specify/
