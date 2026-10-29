@@ -42,7 +42,7 @@ mvn clean javafx:run
 
 ## Architecture
 
-The codebase has three major layers:
+The codebase has four major layers:
 
 ### Model Layer (`model/`)
 Core game data and rules, separated by interface (`abstraction/`) and implementation (`impl/`):
@@ -56,6 +56,9 @@ Rule verification is handled by specialized verifiers in `model/common/util/`:
 - `FfnhVerifier` — 4-4 forbidden hand rule
 - `OlnhVerifier` — overline (长连) forbidden hand rule
 - `DirectedPatternCounter` — pattern counting along the 4 polar axes (N-S, E-W, NE-SW, SE-NW)
+
+### Algo Layer (`algo/`)
+Drop-decision algorithms on top of Model, fully decoupled from game flow. `GomokuAlgorithm` is the pluggable interface; `RandomGomokuAlgorithm` (uniform random legal move) is the current implementation. The UI layer instantiates and drives it.
 
 ### Game Layer (`game/`)
 Turn-based game flow built on top of Model. `GameImpl` manages actor turns, move validation, and game situation tracking. Instantiated via `GameFactory`.

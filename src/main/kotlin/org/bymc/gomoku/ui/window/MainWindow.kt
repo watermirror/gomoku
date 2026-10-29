@@ -1,9 +1,9 @@
 package org.bymc.gomoku.ui.window
 
-import org.bymc.gomoku.game.abstraction.AiPlayer
+import org.bymc.gomoku.algo.GomokuAlgorithm
+import org.bymc.gomoku.algo.RandomGomokuAlgorithm
 import org.bymc.gomoku.game.abstraction.Game
 import org.bymc.gomoku.game.factory.GameFactory
-import org.bymc.gomoku.game.impl.RandomAiPlayer
 import org.bymc.gomoku.model.abstraction.Rule
 import org.bymc.gomoku.model.common.param.DropLegality
 import org.bymc.gomoku.model.common.param.GameState
@@ -210,9 +210,9 @@ class MainWindow(
     private var challengeAiEntry: Boolean = false
 
     /**
-     * AI 玩家。
+     * AI 玩家（落子决策算法）。
      */
-    private val aiPlayer: AiPlayer = RandomAiPlayer()
+    private val aiPlayer: GomokuAlgorithm = RandomGomokuAlgorithm()
 
     /**
      * AI 落子定时器（单次触发，延迟后由 AI 落子）。

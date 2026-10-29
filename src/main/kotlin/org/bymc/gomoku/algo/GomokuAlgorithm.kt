@@ -1,4 +1,4 @@
-package org.bymc.gomoku.game.abstraction
+package org.bymc.gomoku.algo
 
 import org.bymc.gomoku.model.abstraction.BoardViewModel
 import org.bymc.gomoku.model.abstraction.Rule
@@ -6,7 +6,7 @@ import org.bymc.gomoku.model.common.param.Location2D
 import org.bymc.gomoku.model.common.param.Stone
 
 /**
- * AI 玩家接口。为给定执子方在当前棋面上决定一个落子点。
+ * 五子棋落子决策算法接口。为给定执子方在当前棋面上决定一个落子点。
  *
  * 实现约定：
  * - 调用方须保证棋局进行中且轮到 stone 方；
@@ -16,9 +16,9 @@ import org.bymc.gomoku.model.common.param.Stone
  * - 在 EDT 上调用，实现不得自行开启线程。
  *
  * @author: zheng.chez
- * @since: 2026/10/28
+ * @since: 2026/10/29
  */
-interface AiPlayer {
+interface GomokuAlgorithm {
 
     /**
      * 决定落子点。

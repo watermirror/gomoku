@@ -1,6 +1,5 @@
-package org.bymc.gomoku.game.impl
+package org.bymc.gomoku.algo
 
-import org.bymc.gomoku.game.abstraction.AiPlayer
 import org.bymc.gomoku.model.abstraction.BoardViewModel
 import org.bymc.gomoku.model.abstraction.Rule
 import org.bymc.gomoku.model.common.param.Drop
@@ -11,21 +10,21 @@ import kotlin.random.Random
 import kotlin.random.Random.Default
 
 /**
- * 随机策略 AI 玩家。从所有空位中均匀随机选择一个符合规则的落子点。
+ * 随机策略五子棋算法。从所有空位中均匀随机选择一个符合规则的落子点。
  *
  * 黑棋会排除禁手点；白棋无禁手约束。可注入随机种子以保证测试可复现。
  *
  * @author: zheng.chez
- * @since: 2026/10/28
+ * @since: 2026/10/29
  */
-class RandomAiPlayer(
+class RandomGomokuAlgorithm(
 
     /**
      * 随机源。
      */
     private val random: Random = Default
 
-) : AiPlayer {
+) : GomokuAlgorithm {
 
     /**
      * 决定落子点。
@@ -59,6 +58,6 @@ class RandomAiPlayer(
         /**
          * 以指定种子构建实例，用于测试复现。
          */
-        operator fun invoke(seed: Long): RandomAiPlayer = RandomAiPlayer(Random(seed))
+        operator fun invoke(seed: Long): RandomGomokuAlgorithm = RandomGomokuAlgorithm(Random(seed))
     }
 }

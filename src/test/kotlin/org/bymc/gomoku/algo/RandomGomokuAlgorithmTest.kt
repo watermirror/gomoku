@@ -1,4 +1,4 @@
-package org.bymc.gomoku.game.impl
+package org.bymc.gomoku.algo
 
 import org.bymc.gomoku.model.common.param.Drop
 import org.bymc.gomoku.model.common.param.DropLegality
@@ -15,12 +15,12 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 /**
- * Tests for RandomAiPlayer.
+ * Tests for RandomGomokuAlgorithm.
  *
  * @author: zheng.chez
  * @since: 2026/10/28
  */
-internal class RandomAiPlayerTest {
+internal class RandomGomokuAlgorithmTest {
 
     private val rule = RuleImpl(ttnhEnabled = true, ffnhEnabled = true, olnhEnables = true)
     private val looseRule = RuleImpl(ttnhEnabled = false, ffnhEnabled = false, olnhEnables = false)
@@ -29,7 +29,7 @@ internal class RandomAiPlayerTest {
     fun `returns in-board location on empty board`() {
 
         val board = TestBoardViewModel(Size2D(15, 15), ".".repeat(15 * 15))
-        val player = RandomAiPlayer(seed = 42L)
+        val player = RandomGomokuAlgorithm(seed = 42L)
 
         val location = player.pickDropLocation(board, rule, Stone.BLACK)
 
@@ -61,7 +61,7 @@ internal class RandomAiPlayerTest {
                 . . . . . . . . . . . . . . .
             """.trimIndent()
         )
-        val player = RandomAiPlayer(seed = 7L)
+        val player = RandomGomokuAlgorithm(seed = 7L)
 
         repeat(100) {
 
@@ -95,7 +95,7 @@ internal class RandomAiPlayerTest {
                 . . . . . . . . . . . . . . .
             """.trimIndent()
         )
-        val player = RandomAiPlayer(seed = 99L)
+        val player = RandomGomokuAlgorithm(seed = 99L)
 
         repeat(200) {
 
@@ -112,7 +112,7 @@ internal class RandomAiPlayerTest {
         // Dropping black at (3, 0) forms a six-stone overline (forbidden), but the same
         // location is legal for white since white has no forbidden rules.
         val board = TestBoardViewModel(Size2D(6, 1), "x x x . x x")
-        val player = RandomAiPlayer(seed = 1L)
+        val player = RandomGomokuAlgorithm(seed = 1L)
 
         assertEquals(Location2D(3, 0), player.pickDropLocation(board, rule, Stone.WHITE))
     }
@@ -121,7 +121,7 @@ internal class RandomAiPlayerTest {
     fun `returns null when board is full`() {
 
         val board = TestBoardViewModel(Size2D(2, 1), "x o")
-        val player = RandomAiPlayer(seed = 1L)
+        val player = RandomGomokuAlgorithm(seed = 1L)
 
         assertNull(player.pickDropLocation(board, looseRule, Stone.BLACK))
         assertNull(player.pickDropLocation(board, looseRule, Stone.WHITE))
@@ -133,7 +133,7 @@ internal class RandomAiPlayerTest {
         // Single free cell (3, 0): dropping black there forms a six-stone overline (forbidden),
         // so black has no legal location while white can still pick it.
         val board = TestBoardViewModel(Size2D(6, 1), "x x x . x x")
-        val player = RandomAiPlayer(seed = 1L)
+        val player = RandomGomokuAlgorithm(seed = 1L)
 
         assertNull(player.pickDropLocation(board, rule, Stone.BLACK))
     }
@@ -143,8 +143,8 @@ internal class RandomAiPlayerTest {
 
         val board = TestBoardViewModel(Size2D(15, 15), ".".repeat(15 * 15))
 
-        val first = RandomAiPlayer(seed = 2026L).pickDropLocation(board, rule, Stone.BLACK)
-        val second = RandomAiPlayer(seed = 2026L).pickDropLocation(board, rule, Stone.BLACK)
+        val first = RandomGomokuAlgorithm(seed = 2026L).pickDropLocation(board, rule, Stone.BLACK)
+        val second = RandomGomokuAlgorithm(seed = 2026L).pickDropLocation(board, rule, Stone.BLACK)
 
         assertEquals(first, second)
     }
