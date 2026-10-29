@@ -356,4 +356,112 @@ internal class GameImplTest {
         assertEquals(2, game.getGameSituation().dropCount)
         assertTrue(game.getGameSituation().retractionAvailable)
     }
+
+    @Test
+    fun retractLast_twice_consecutive_returnsTurnToBlackPlayer() {
+
+        // Challenge-AI with player black: player turn at even dropCount. Retracting two
+        // stones (AI white's + player black's) must return the turn to black (the player).
+        val board: Board = mock()
+        val recordWhite: DropRecord = mock()
+        whenever(recordWhite.getDrop()).thenReturn(Drop(Location2D(8, 8), Stone.WHITE))
+        val recordBlack: DropRecord = mock()
+        whenever(recordBlack.getDrop()).thenReturn(Drop(Location2D(7, 7), Stone.BLACK))
+        val history: History = mock()
+        // retractLast returns the newest record first: white (AI's last), then black (player's).
+        whenever(history.retractLast()).thenReturn(recordWhite, recordBlack)
+        whenever(history.getRecordCount()).thenReturn(2)
+        whenever(history.getLastRecord()).thenReturn(recordBlack)
+        val rule: Rule = mock()
+        whenever(rule.judgeGameState(any())).thenReturn(GameState.PLAYING)
+        val game = GameImpl(board, history, rule)
+
+        game.retractLast()
+        game.retractLast()
+
+        verify(board).cleanCell(eq(Location2D(8, 8)))
+        verify(board).cleanCell(eq(Location2D(7, 7)))
+        assertEquals(Stone.BLACK, game.getGameSituation().roundActor)
+        assertEquals(2, game.getGameSituation().dropCount)
+    }
+
+    @Test
+    fun retractLast_twice_consecutive_returnsTurnToWhitePlayer() {
+
+        // Challenge-AI with player white (AI black moves first): player turn at odd dropCount.
+        // Retracting two stones (player white's + AI black's) must return the turn to white.
+        val board: Board = mock()
+        val recordWhite: DropRecord = mock()
+        whenever(recordWhite.getDrop()).thenReturn(Drop(Location2D(9, 9), Stone.WHITE))
+        val recordBlack: DropRecord = mock()
+        whenever(recordBlack.getDrop()).thenReturn(Drop(Location2D(7, 7), Stone.BLACK))
+        val history: History = mock()
+        // Sequence is B(ai) W(player) B(ai): retractLast returns the newest record first,
+        // i.e. AI's black, then the player's white.
+        whenever(history.retractLast()).thenReturn(recordBlack, recordWhite)
+        whenever(history.getRecordCount()).thenReturn(1)
+        whenever(history.getLastRecord()).thenReturn(recordBlack)
+        val rule: Rule = mock()
+        whenever(rule.judgeGameState(any())).thenReturn(GameState.PLAYING)
+        val game = GameImpl(board, history, rule)
+
+        game.retractLast()
+        game.retractLast()
+
+        verify(board).cleanCell(eq(Location2D(9, 9)))
+        verify(board).cleanCell(eq(Location2D(7, 7)))
+        assertEquals(Stone.WHITE, game.getGameSituation().roundActor)
+        assertEquals(1, game.getGameSituation().dropCount)
+    }
+
+    @Test
+    fun retractLast_twice_afterTerminalState_restoresPlaying() {
+
+        // Terminal state (white won): retracting two stones restores PLAYING with the
+        // turn back to the player.
+        val board: Board = mock()
+        val recordWhite: DropRecord = mock()
+        whenever(recordWhite.getDrop()).thenReturn(Drop(Location2D(8, 8), Stone.WHITE))
+        val recordBlack: DropRecord = mock()
+        whenever(recordBlack.getDrop()).thenReturn(Drop(Location2D(7, 7), Stone.BLACK))
+        val history: History = mock()
+        whenever(history.retractLast()).thenReturn(recordWhite, recordBlack)
+        whenever(history.getRecordCount()).thenReturn(2)
+        whenever(history.getLastRecord()).thenReturn(recordBlack)
+        val rule: Rule = mock()
+        // Terminal before retracts, playing after the board shrinks.
+        whenever(rule.judgeGameState(any()))
+            .thenReturn(GameState.WHITE_WON, GameState.PLAYING, GameState.PLAYING, GameState.PLAYING)
+        val game = GameImpl(board, history, rule)
+
+        game.retractLast()
+        game.retractLast()
+
+        assertEquals(GameState.PLAYING, game.getGameSituation().state)
+        assertEquals(Stone.BLACK, game.getGameSituation().roundActor)
+    }
+
+    @Test
+    fun retractLast_once_afterPlayerWonTerminal_returnsTurnToPlayer() {
+
+        // Player-won terminal (player black's winning move is the newest record):
+        // retracting exactly one stone returns the turn to the player, while retracting
+        // a second stone (the AI's white) would wrongly hand the turn to the AI.
+        val board: Board = mock()
+        val recordBlack: DropRecord = mock()
+        whenever(recordBlack.getDrop()).thenReturn(Drop(Location2D(7, 7), Stone.BLACK))
+        val history: History = mock()
+        whenever(history.retractLast()).thenReturn(recordBlack)
+        whenever(history.getRecordCount()).thenReturn(3)
+        whenever(history.getLastRecord()).thenReturn(recordBlack)
+        val rule: Rule = mock()
+        whenever(rule.judgeGameState(any())).thenReturn(GameState.PLAYING)
+        val game = GameImpl(board, history, rule)
+
+        game.retractLast()
+
+        assertEquals(Stone.BLACK, game.getGameSituation().roundActor)
+        assertEquals(GameState.PLAYING, game.getGameSituation().state)
+        assertEquals(3, game.getGameSituation().dropCount)
+    }
 }
